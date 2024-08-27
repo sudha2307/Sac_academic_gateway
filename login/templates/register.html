@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+       body {
+            background: url('https://t4.ftcdn.net/jpg/02/98/06/69/360_F_298066929_M9qgNMr3OJWo6H2GebpA5zOYxN2CphV1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: #fff;
+            margin: 0;
+        }
+
+        header h2 {
+            font-size: 1.5rem;
+            color: #f0f0f0;
+            margin: 0.5rem 0 0;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-align: left;
+        }
+
+        input[type="text"], input[type="password"], select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+            font-size: 1rem;
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus, select:focus {
+            border-color: #ff7e5f;
+            box-shadow: 0 0 5px rgba(255, 126, 95, 0.5);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        input[type="submit"] {
+            background: #ff7e5f;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background: #e85a4f;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .message {
+            color: #ff7e5f;
+            margin-top: 1rem;
+        }
+
+        .department-list {
+    display: none; /* Hide the list by default */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #d4089e;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    box-sizing: border-box;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #ccc #fff; /* For Firefox */
+}
+
+.search-container:hover .department-list {
+    display: block; /* Show the list when hovering over the search container */
+}
+
+/* Other existing styles */
+
+
+        .department-list li {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .department-list li:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .department-list li:last-child {
+            border-bottom: none;
+        }
+
+        .department-container:hover .department-list {
+            display: block; /* Show the list when the container is hovered */
+        }
+
+        .department-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .department-list::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 4px;
+        }
+
+        .department-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sadakathullah Appa College (Autonomous)</h1>
+        <h2>Student Academic Gateway</h2>
+    </header>
+    <div class="container">
+        <h1>Register</h1>
+        <form method="POST" action="{{ url_for('register') }}">
+            <label for="name">Name :</label>
+            <input type="text" id="name" name="name" required style="text-transform: uppercase;">
+
+            <label for="username">Register No:</label>
+            <input type="text" id="username" name="username" required style="text-transform: uppercase;">
+
+            <label for="password">Password:</label>
+            <div class="password-container">
+                <input type="password" id="password" name="password" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+            </div>
+
+            <div class="search-container">
+                <label for="searchInput">Department:</label>
+                <input type="text" id="searchInput" placeholder="Search for a department...">
+                <ul id="departmentList" class="department-list"></ul>
+            </div>
+            <input type="hidden" id="department" name="department">
+            
+            <input type="submit" value="Register">
+        </form>
+        {% if message %}
+        <p class="message">{{ message }}</p>
+        {% endif %}
+    </div>
+
+    <script>
+        const departments = [
+            "B.Sc. Information Technology (I year)", "B.Sc. Information Technology (II year)", "B.Sc. Information Technology (III year)",
+        "B.A. English (I year)", "B.A. English (II year)", "B.A. English (III year)",
+            "B.A. History (I year)", "B.A. History (II year)", "B.A. History (III year)",
+            "B.Com. (I year)", "B.Com. (II year)", "B.Com. (III year)",
+            "BBA (I year)","BBA (II year)","BBA (III year)",
+            "BCA (I year)","BCA (II year)","BCA (III year)",
+            "B.A. Arabic (I year)", "B.A. Arabic (II year)", "B.A. Arabic (III year)",
+            "B.A. Economics (I year)", "B.A. Economics (II year)", "B.A. Economics (III year)",
+            "B.A. English (Unaided) (I year)", "B.A. English (Unaided) (II year)", "B.A. English (Unaided) (III year)",
+            "B.A. Tamil (I year)", "B.A. Tamil (II year)", "B.A. Tamil (III year)",
+           
+            "B.Com. Finance (I year)", "B.Com. Finance (II year)", "B.Com. Finance (III year)",
+            "B.Com. Honours (I year)", "B.Com. Honours (II year)", "B.Com. Honours (III year)",
+            "B.Com. (Unaided) A (I year)", "B.Com. (Unaided) A (II year)", "B.Com. (Unaided) A (III year)",
+            "B.Com. (Unaided) B (I year)", "B.Com. (Unaided) B (II year)", "B.Com. (Unaided) B (III year)",
+            "B.Li.Sc. (I year)", "B.Li.Sc. (II year)", "B.Li.Sc. (III year)",
+            "B.Sc. Mathematics (I year)", "B.Sc. Mathematics (II year)", "B.Sc. Mathematics (III year)",
+            "B.Sc. Physics (I year)", "B.Sc. Physics (II year)", "B.Sc. Physics (III year)",
+            "B.Sc. Chemistry (I year)", "B.Sc. Chemistry (II year)", "B.Sc. Chemistry (III year)",
+            "B.Sc. Zoology (I year)", "B.Sc. Zoology (II year)", "B.Sc. Zoology (III year)",
+            "B.Sc. Computer Science (I year)", "B.Sc. Computer Science (II year)", "B.Sc. Computer Science (III year)",
+            "B.Sc. Microbiology (I year)", "B.Sc. Microbiology (II year)", "B.Sc. Microbiology (III year)",
+            "B.Sc. Nutrition and Dietetics (I year)", "B.Sc. Nutrition and Dietetics (II year)", "B.Sc. Nutrition and Dietetics (III year)",
+            "B.Sc. Psychology (I year)", "B.Sc. Psychology (II year)", "B.Sc. Psychology (III year)",
+            
+            "B.Sc. Computer Science (Unaided) (I year)", "B.Sc. Computer Science (Unaided) (II year)", "B.Sc. Computer Science (Unaided) (III year)",
+            "M.Sc. Computer Science (I year)", "M.Sc. Computer Science (II year)",
+            "M.Sc. Mathematics (I year)", "M.Sc. Mathematics (II year)",
+            "M.Sc. Physics (I year)", "M.Sc. Physics (II year)",
+            "M.Sc. Chemistry (I year)", "M.Sc. Chemistry (II year)",
+            "M.Sc. Zoology (I year)", "M.Sc. Zoology (II year)",
+            "M.Sc. Microbiology (I year)", "M.Sc. Microbiology (II year)",
+            "M.Sc. Nutrition & Dietetics (I year)", "M.Sc. Nutrition & Dietetics (II year)",
+            "M.A. History (I year)", "M.A. History (II year)",
+            "M.Com. (I year)", "M.Com. (II year)",
+            "M.A. English (I year)", "M.A. English (II year)"
+        ];
+
+        const departmentList = document.getElementById('departmentList');
+        const searchInput = document.getElementById('searchInput');
+        const hiddenDepartmentInput = document.getElementById('department');
+
+        function displayDepartments(departments) {
+            departmentList.innerHTML = '';
+            departments.forEach(department => {
+                const li = document.createElement('li');
+                li.textContent = department;
+                li.onclick = () => selectDepartment(department);
+                departmentList.appendChild(li);
+            });
+        }
+
+        function selectDepartment(department) {
+            searchInput.value = department;
+            hiddenDepartmentInput.value = department;
+            departmentList.innerHTML = '';
+        }
+
+        searchInput.addEventListener('input', function() {
+            const input = searchInput.value.toLowerCase();
+            const filteredDepartments = departments.filter(department =>
+                department.toLowerCase().includes(input)
+            );
+            displayDepartments(filteredDepartments);
+        });
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.querySelector('.toggle-password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            togglePassword.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+        }
+
+        // Initialize department list display
+        displayDepartments(departments);
+    </script>
+</body>
+</html>

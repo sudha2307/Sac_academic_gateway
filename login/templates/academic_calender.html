@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .calendar-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 40px;
+        }
+        .calendar {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .calendar-header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px 5px 0 0;
+            font-size: 1.2em;
+        }
+        .calendar-body {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+        }
+        .day, .date {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+        }
+        .day:last-child, .date:last-child {
+            border-right: none;
+        }
+        .date:nth-child(7n) {
+            color: red;
+        }
+        .date-info {
+            color: #333;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+        .date-info.special {
+            color: #e67e22;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calendar-container">
+    <!-- Calendar for August -->
+    <div class="calendar">
+        <div class="calendar-header">August 2024</div>
+        <div class="calendar-body">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+
+            <!-- August starts on a Thursday -->
+            <div class="date"></div> <!-- Sun -->
+            <div class="date"></div> <!-- Mon -->
+            <div class="date"></div> <!-- Tue -->
+            <div class="date"></div> <!-- Wed -->
+            <div class="date">1 <div class="date-info special">A6</div></div> <!-- Thu -->
+            <div class="date">2 <div class="date-info">B</div></div> <!-- Fri -->
+            <div class="date">3</div> <!-- Sat -->
+            <!-- Continue with other dates -->
+            <div class="date">4</div><div class="date">5 <div class="date-info special">C LSM-I</div></div><div class="date">6 <div class="date-info">D</div></div><div class="date">7 <div class="date-info special">E CIA-I-P Begins</div></div>
+            <div class="date">8 <div class="date-info">F</div></div><div class="date">9 <div class="date-info special">A7</div></div><div class="date">10</div><div class="date">11</div><div class="date">12 <div class="date-info">B</div></div><div class="date">13 <div class="date-info special">C CIA-I-P Ends</div></div><div class="date">14 <div class="date-info special">D LSQ-II</div></div>
+            <div class="date">15 <div class="date-info special">Independence Day</div></div><div class="date">16</div><div class="date">17</div><div class="date">18</div><div class="date">19 <div class="date-info">E</div></div><div class="date">20 <div class="date-info">F</div></div><div class="date">21 <div class="date-info special">A8</div></div>
+            <div class="date">22 <div class="date-info">B</div></div><div class="date">23 <div class="date-info">C</div></div><div class="date">24 <div class="date-info">D</div></div><div class="date">25</div><div class="date">26 <div class="date-info special">Krishna Jeyanthi</div></div><div class="date">27 <div class="date-info special">E CIA-II Begins</div></div><div class="date">28 <div class="date-info">F</div></div>
+            <div class="date">29 <div class="date-info special">A9</div></div><div class="date">30 <div class="date-info">B</div></div><div class="date">31</div>
+        </div>
+    </div>
+
+    <!-- Calendar for September -->
+    <div class="calendar">
+        <div class="calendar-header">September 2024</div>
+        <div class="calendar-body">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+
+            <!-- September starts on a Sunday -->
+            <div class="date">1</div> <!-- Sun -->
+            <div class="date">2 <div class="date-info">C</div></div> <!-- Mon -->
+            <div class="date">3 <div class="date-info">D</div></div> <!-- Tue -->
+            <div class="date">4</div> <!-- Wed -->
+            <div class="date">5 <div class="date-info special">F CIA- Ends</div></div> <!-- Thu -->
+            <div class="date">6 <div class="date-info special">A10</div></div> <!-- Fri -->
+            <div class="date">7 <div class="date-info special">Vinayagar Chathurthi</div></div> <!-- Sat -->
+            <!-- Continue with other dates -->
+            <div class="date">8</div><div class="date">9 <div class="date-info special">B Ph.D. C.W-I</div></div><div class="date">10 <div class="date-info special">C Ph.D. C.W-I</div></div><div class="date">11 <div class="date-info special">D Ph.D. C.W-I</div></div><div class="date">12 <div class="date-info special">E LSM-II</div></div><div class="date">13 <div class="date-info">F</div></div><div class="date">14</div>
+            <div class="date">15</div><div class="date">16 <div class="date-info special">Meeladun Nabl</div></div><div class="date">17 <div class="date-info special">A11 LSQ-IIl- CIA-II-P Begins</div></div><div class="date">18 <div class="date-info">B</div></div><div class="date">19 <div class="date-info">C</div></div><div class="date">20 <div class="date-info">D</div></div><div class="date">21</div>
+            <div class="date">22</div><div class="date">23 <div class="date-info special">E CIA-II-P Ends</div></div><div class="date">24 <div class="date-info">F</div></div><div class="date">25 <div class="date-info special">A12</div></div><div class="date">26 <div class="date-info">B</div></div><div class="date">27 <div class="date-info special">C CIA-III Begins</div></div><div class="date">28</div>
+            <div class="date">29</div><div class="date">30 <div class="date-info">D</div></div>
+        </div>
+    </div>
+
+    <!-- Calendar for October -->
+    <div class="calendar">
+        <div class="calendar-header">October 2024</div>
+        <div class="calendar-body">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+
+            <!-- October starts on a Tuesday -->
+            <div class="date"></div> <!-- Sun -->
+            <div class="date"></div> <!-- Mon -->
+            <div class="date">1</div> <!-- Tue -->
+            <div class="date">2 <div class="date-info special">Gandhi Jayanthi</div></div> <!-- Wed -->
+            <div class="date">3 <div class="date-info">E</div></div> <!-- Thu -->
+            <div class="date">4 <div class="date-info special">A13</div></div> <!-- Fri -->
+            <div class="date">5</div> <!-- Sat -->
+            <!-- Continue with other dates -->
+            <div class="date">6</div><div class="date">7 <div class="date-info">B</div></div><div class="date">8 <div class="date-info">C</div></div><div class="date">9 <div class="date-info">D</div></div><div class="date">10 <div class="date-info">E</div></div><div class="date">11 <div class="date-info special">F CIA-III Ends</div></div><div class="date">12</div>
+            <div class="date">13</div><div class="date">14 <div class="date-info">A14</div></div><div class="date">15 <div class="date-info">B</div></div><div class="date">16 <div class="date-info">C</div></div><div class="date">17 <div class="date-info special">LSQ-IV</div></div><div class="date">18</div><div class="date">19 <div class="date-info">D</div></div><div class="date">20</div>
+            <div class="date">21 <div class="date-info">E</div></div><div class="date">22 <div class="date-info special">Valediction</div></div><div class="date">23</div><div class="date">24 <div class="date-info special">Ph.D. C.W-II</div></div><div class="date">25 <div class="date-info">F</div></div><div class="date">26 <div class="date-info special">IAE Ph.D.</div></div><div class="date">27 <div class="date-info special">IAE Ph.D.</div></div><div class="date">28</div>
+            <div class="date">29</div><div class="date">30 <div class="date-info special">IAE Ph.D.</div></div><div class="date">31</div>
+        </div>
+    </div>
+
+    <!-- Calendar for November -->
+    <div class="calendar">
+        <div class="calendar-header">November 2024</div>
+        <div class="calendar-body">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+
+            <!-- November starts on a Friday -->
+            <div class="date"></div> <!-- Sun -->
+            <div class="date"></div> <!-- Mon -->
+            <div class="date"></div> <!-- Tue -->
+            <div class="date"></div> <!-- Wed -->
+            <div class="date"></div> <!-- Thu -->
+            <div class="date">1</div> <!-- Fri -->
+            <div class="date">2</div> <!-- Sat -->
+            <!-- Continue with other dates -->
+            <div class="date">3</div><div class="date">4</div><div class="date">5 <div class="date-info special">Ph.D. C.W-IlI</div></div><div class="date">6 <div class="date-info">E</div></div><div class="date">7 <div class="date-info special">A15</div></div>
+            <div class="date">8 <div class="date-info">F</div></div><div class="date">9</div><div class="date">10 <div class="date-info special">Final Summative Exam Begins</div></div><div class="date">11</div><div class="date">12</div><div class="date">13 <div class="date-info">B</div></div><div class="date">14 <div class="date-info">C</div></div>
+            <div class="date">15 <div class="date-info special">D</div></div><div class="date">16 <div class="date-info special">Examination Contd.</div></div><div class="date">17</div><div class="date">18 <div class="date-info special">E</div></div><div class="date">19 <div class="date-info">F</div></div><div class="date">20 <div class="date-info special">A16</div></div>
+            <div class="date">21</div><div class="date">22</div><div class="date">23 <div class="date-info special">End of Final Summative Exam</div></div><div class="date">24</div><div class="date">25</div><div class="date">26</div><div class="date">27</div><div class="date">28</div>
+            <div class="date">29</div><div class="date">30</div>
+        </div>
+    </div>
+
+</div>
+<div class="calendar-container">
+
+    <!-- December 2024 -->
+    <div class="calendar">
+        <div class="calendar-header">December 2024</div>
+        <div class="calendar-body">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+
+            <!-- December starts on a Sunday -->
+            <div class="date">1</div>
+            <div class="date">2 <div class="date-info">A1</div></div>
+            <div class="date">3 <div class="date-info">B</div></div>
+            <div class="date">4 <div class="date-info">C</div></div>
+            <div class="date">5 <div class="date-info">D</div></div>
+            <div class="date">6 <div class="date-info">E</div></div>
+            <div class="date">7</div>
+            <div class="date">8</div>
+            <div class="date">9 <div class="date-info">F</div></div>
+            <div class="date">10 <div class="date-info">A2</div></div>
+            <div class="date">11 <div class="date-info">B</div></div>
+            <div class="date">12 <div class="date-info">C</div></div>
+            <div class="date">13 <div class="date-info">D</div></div>
+            <div class="date">14</div>
+            <div class="date">15</div>
+            <div class="date">16 <div class="date-info">E</div></div>
+            <div class="date">17 <div class="date-info">F</div></div>
+            <div class="date">18 <div class="date-info">A3</div></div>
+            <div class="date">19 <div class="date-info">B LSQ-I</div></div>
+            <div class="date">20 <div class="date-info">C</div></div>
+            <div class="date">21</div>
+            <div class="date">22</div>
+            <div class="date">23 <div class="date-info">D</div></div>
+            <div class="date">24 <div class="date-info">E</div></div>
+            <div class="date">25 <div class="date-info special">Christmas</div></div>
+            <div class="date">26</div>
+            <div class="date">27 <div class="date-info">F</div></div>
+            <div class="date">28 <div class="date-info">A4</div></div>
+            <div class="date">29</div>
+            <div class="date">30 <div class="date-info">B</div></div>
+            <div class="date">31 <div class="date-info">C</div></div>
+        </div>
+    </div>
+
+    <!-- January 2025 -->
+    <div class="calendar">
+        <div class="calendar-header">January 2025</div>
+        <div class="calendar-body">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+
+            <!-- January starts on a Wednesday -->
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date">1 <div class="date-info special">New Year</div></div>
+            <div class="date">2 <div class="date-info">D CIA-I Begins</div></div>
+            <div class="date">3 <div class="date-info">E</div></div>
+            <div class="date">4 <div class="date-info">F</div></div>
+            <div class="date">5</div>
+            <div class="date">6 <div class="date-info">A5</div></div>
+            <div class="date">7 <div class="date-info">B</div></div>
+            <div class="date">8 <div class="date-info">C</div></div>
+            <div class="date">9 <div class="date-info">D</div></div>
+            <div class="date">10 <div class="date-info">E CIA-I Ends</div></div>
+            <div class="date">11 <div class="date-info">F</div></div>
+            <div class="date">12</div>
+            <div class="date">13</div>
+            <div class="date">14 <div class="date-info special">Pongal</div></div>
+            <div class="date">15 <div class="date-info special">Thiruvalluvar Day</div></div>
+            <div class="date">16 <div class="date-info special">Uzhavar Thirunal</div></div>
+            <div class="date">17</div>
+            <div class="date">18</div>
+            <div class="date">19</div>
+            <div class="date">20 <div class="date-info">A6</div></div>
+            <div class="date">21 <div class="date-info">B</div></div>
+            <div class="date">22 <div class="date-info">C</div></div>
+            <div class="date">23 <div class="date-info">D LSM-I</div></div>
+            <div class="date">24 <div class="date-info">E</div></div>
+            <div class="date">25</div>
+            <div class="date">26 <div class="date-info special">Republic Day</div></div>
+            <div class="date">27 <div class="date-info">F CIA-I-P. Begins</div></div>
+            <div class="date">28 <div class="date-info">A7 Mihraj</div></div>
+            <div class="date">29 <div class="date-info">B</div></div>
+            <div class="date">30 <div class="date-info">C</div></div>
+            <div class="date">31 <div class="date-info">D CIA-I-P. Ends</div></div>
+        </div>
+    </div>
+
+    <!-- February 2025 -->
+    <div class="calendar">
+        <div class="calendar-header">February 2025</div>
+        <div class="calendar-body">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+
+            <!-- February starts on a Saturday -->
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date">1 <div class="date-info">E LSQ-II</div></div>
+            <div class="date">2</div>
+            <div class="date">3 <div class="date-info">F</div></div>
+            <div class="date">4 <div class="date-info">A8</div></div>
+            <div class="date">5 <div class="date-info">B</div></div>
+            <div class="date">6 <div class="date-info">C</div></div>
+            <div class="date">7 <div class="date-info">D</div></div>
+            <div class="date">8</div>
+            <div class="date">9 <div class="date-info">E</div></div>
+            <div class="date">10 <div class="date-info special">Thaipoosam</div></div>
+            <div class="date">11 <div class="date-info">F</div></div>
+            <div class="date">12 <div class="date-info">A9 CIA-II Begins</div></div>
+            <div class="date">13 <div class="date-info">B</div></div>
+            <div class="date">14 <div class="date-info">Bara'th, Ayya Vaikundar</div></div>
+            <div class="date">15</div>
+            <div class="date">16 <div class="date-info">C</div></div>
+            <div class="date">17 <div class="date-info">D</div></div>
+            <div class="date">18 <div class="date-info">E CIA-II Ends</div></div>
+            <div class="date">19</div>
+            <div class="date">20 <div class="date-info">F</div></div>
+            <div class="date">21 <div class="date-info">A10</div></div>
+            <div class="date">22 <div class="date-info">B</div></div>
+            <div class="date">23 <div class="date-info">C</div></div>
+            <div class="date">24 <div class="date-info">D LSM-II</div></div>
+            <div class="date">25</div>
+            <div class="date">26 <div class="date-info">E CIA-II-P. Begins</div></div>
+            <div class="date">27 <div class="date-info">F</div></div>
+            <div class="date">28 <div class="date-info">A11</div></div>
+        </div>
+    </div>
+
+    <!-- March 2025 -->
+    <div class="calendar">
+        <div class="calendar-header">March 2025</div>
+        <div class="calendar-body">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+
+            <!-- March starts on a Saturday -->
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date">1 <div class="date-info">B CIA-II-P. Ends</div></div>
+            <div class="date">2</div>
+            <div class="date">3 <div class="date-info">C</div></div>
+            <div class="date">4 <div class="date-info">D</div></div>
+            <div class="date">5 <div class="date-info">E</div></div>
+            <div class="date">6 <div class="date-info">F</div></div>
+            <div class="date">7</div>
+            <div class="date">8</div>
+            <div class="date">9 <div class="date-info">A12</div></div>
+            <div class="date">10 <div class="date-info">B</div></div>
+            <div class="date">11 <div class="date-info">C</div></div>
+            <div class="date">12 <div class="date-info">D LSQ-III</div></div>
+            <div class="date">13 <div class="date-info">E</div></div>
+            <div class="date">14</div>
+            <div class="date">15</div>
+            <div class="date">16 <div class="date-info">F</div></div>
+            <div class="date">17 <div class="date-info">A13</div></div>
+            <div class="date">18 <div class="date-info">B</div></div>
+            <div class="date">19 <div class="date-info">C</div></div>
+            <div class="date">20 <div class="date-info">D CIA-III Begins</div></div>
+            <div class="date">21</div>
+            <div class="date">22</div>
+            <div class="date">23 <div class="date-info">E</div></div>
+            <div class="date">24 <div class="date-info">F</div></div>
+            <div class="date">25</div>
+            <div class="date">26 <div class="date-info">A14</div></div>
+            <div class="date">27 <div class="date-info">B</div></div>
+            <div class="date">28 <div class="date-info">C</div></div>
+            <div class="date">29 <div class="date-info">D CIA-III Ends</div></div>
+            <div class="date">30</div>
+            <div class="date">31</div>
+        </div>
+    </div>
+
+    <!-- April 2025 -->
+    <div class="calendar">
+        <div class="calendar-header">April 2025</div>
+        <div class="calendar-body">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+
+            <!-- April starts on a Tuesday -->
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date">1 <div class="date-info">E</div></div>
+            <div class="date">2 <div class="date-info">F</div></div>
+            <div class="date">3 <div class="date-info">A15</div></div>
+            <div class="date">4 <div class="date-info">B LSQ-IV</div></div>
+            <div class="date">5</div>
+            <div class="date">6</div>
+            <div class="date">7 <div class="date-info">C</div></div>
+            <div class="date">8 <div class="date-info">D</div></div>
+            <div class="date">9 <div class="date-info">E</div></div>
+            <div class="date">10 <div class="date-info">F</div></div>
+            <div class="date">11</div>
+            <div class="date">12</div>
+            <div class="date">13</div>
+            <div class="date">14 <div class="date-info special">Tamil New Year</div></div>
+            <div class="date">15</div>
+            <div class="date">16</div>
+            <div class="date">17 <div class="date-info">A16</div></div>
+            <div class="date">18 <div class="date-info">B</div></div>
+            <div class="date">19</div>
+            <div class="date">20 <div class="date-info">C</div></div>
+            <div class="date">21</div>
+            <div class="date">22 <div class="date-info">D</div></div>
+            <div class="date">23</div>
+            <div class="date">24 <div class="date-info">E Last Working Day</div></div>
+            <div class="date">25</div>
+            <div class="date">26</div>
+            <div class="date">27</div>
+            <div class="date">28 <div class="date-info">Study Leave</div></div>
+            <div class="date">29</div>
+            <div class="date">30</div>
+        </div>
+    </div>
+
+    <!-- May 2025 -->
+    <div class="calendar">
+        <div class="calendar-header">May 2025</div>
+        <div class="calendar-body">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+
+            <!-- May starts on a Thursday -->
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date">1 <div class="date-info special">May Day</div></div>
+            <div class="date">2</div>
+            <div class="date">3</div>
+            <div class="date">4</div>
+            <div class="date">5</div>
+            <div class="date">6</div>
+            <div class="date">7</div>
+            <div class="date">8</div>
+            <div class="date">9</div>
+            <div class="date">10</div>
+            <div class="date">11</div>
+            <div class="date">12</div>
+            <div class="date">13</div>
+            <div class="date">14</div>
+            <div class="date">15 <div class="date-info">CIA-III Results Submission</div></div>
+        </div>
+    </div>
+
+</div>

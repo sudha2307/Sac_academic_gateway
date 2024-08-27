@@ -1,0 +1,15 @@
+body {
+    background-color: #f7f7f7;
+}
+
+h2, h4 {
+    color: #343a40;
+}
+
+.container {
+    margin-top: 100px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sadakathullah Appa College CGPA Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        fieldset {
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 150px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        h2, h3 {
+            text-align: center;
+        }
+        p {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Sadakathullah Appa College CGPA Calculator</h2>
+
+    <!-- Semester 1 -->
+    <fieldset>
+        <h3>Semester One</h3><br>
+        <label>Tamil (3 credits)</label>
+        <input type="number" id="mark11" placeholder="Enter Marks"><br><br>
+        <label>English (3 credits)</label>
+        <input type="number" id="mark12" placeholder="Enter Marks"><br><br>
+        <label>Subject 3</label>
+        <input type="text" id="subject13" placeholder="Subject Name">
+        <input type="number" id="credit13" placeholder="Credit">
+        <input type="number" id="mark13" placeholder="Enter Marks"><br><br>
+        <label>Subject 4</label>
+        <input type="text" id="subject14" placeholder="Subject Name">
+        <input type="number" id="credit14" placeholder="Credit">
+        <input type="number" id="mark14" placeholder="Enter Marks"><br><br>
+        <label>Subject 5</label>
+        <input type="text" id="subject15" placeholder="Subject Name">
+        <input type="number" id="credit15" placeholder="Credit">
+        <input type="number" id="mark15" placeholder="Enter Marks"><br><br>
+        <label>Subject 6</label>
+        <input type="text" id="subject16" placeholder="Subject Name">
+        <input type="number" id="credit16" placeholder="Credit">
+        <input type="number" id="mark16" placeholder="Enter Marks"><br><br>
+        <label>Practical 1 (1 credit)</label>
+        <input type="number" id="mark17" placeholder="Enter Marks"><br><br>
+        <label>Practical 2 (1 credit)</label>
+        <input type="number" id="mark18" placeholder="Enter Marks"><br><br>
+        <button onclick="calculateCGPA(1)">Calculate CGPA Semester 1</button>
+        
+        <h3>Semester One Marks Details</h3>
+        <p id="totalmark1">Total Marks :</p>
+        <p id="obtainedmark1">Obtained Marks :</p>
+        <p id="cgpa1">CGPA :</p>
+        <p id="percentage1">Percentage :</p> <br>
+    </fieldset>
+
+    <!-- Semester 2 -->
+    <!-- Repeat similar structure for other semesters -->
+    !-- Semester 2 -->
+    <fieldset>
+        <h3>Semester Two</h3><br>
+        <label>Tamil (3 credits)</label>
+        <input type="number" id="mark21" placeholder="Enter Marks"><br><br>
+        <label>English (3 credits)</label>
+        <input type="number" id="mark22" placeholder="Enter Marks"><br><br>
+        <label>Subject 3</label>
+        <input type="text" id="subject23" placeholder="Subject Name">
+        <input type="number" id="credit23" placeholder="Credit">
+        <input type="number" id="mark23" placeholder="Enter Marks"><br><br>
+        <label>Subject 4</label>
+        <input type="text" id="subject24" placeholder="Subject Name">
+        <input type="number" id="credit24" placeholder="Credit">
+        <input type="number" id="mark24" placeholder="Enter Marks"><br><br>
+        <label>Subject 5</label>
+        <input type="text" id="subject25" placeholder="Subject Name">
+        <input type="number" id="credit25" placeholder="Credit">
+        <input type="number" id="mark25" placeholder="Enter Marks"><br><br>
+        <label>Subject 6</label>
+        <input type="text" id="subject26" placeholder="Subject Name">
+        <input type="number" id="credit26" placeholder="Credit">
+        <input type="number" id="mark26" placeholder="Enter Marks"><br><br>
+        <label>Practical 1 (1 credit)</label>
+        <input type="number" id="mark27" placeholder="Enter Marks"><br><br>
+        <label>Practical 2 (1 credit)</label>
+        <input type="number" id="mark28" placeholder="Enter Marks"><br><br>
+        <button onclick="calculateCGPA(2)">Calculate CGPA Semester 2</button>
+        
+        <h3>Semester Two Marks Details</h3>
+        <p id="totalmark2">Total Marks :</p>
+        <p id="obtainedmark2">Obtained Marks :</p>
+        <p id="cgpa2">CGPA :</p>
+        <p id="percentage2">Percentage :</p> <br>
+    </fieldset>
+
+    <!-- Semester 3 -->
+    <fieldset>
+        <h3>Semester Three</h3><br>
+        <label>Tamil (3 credits)</label>
+        <input type="number" id="mark31" placeholder="Enter Marks"><br><br>
+        <label>English (3 credits)</label>
+        <input type="number" id="mark32" placeholder="Enter Marks"><br><br>
+        <label>Subject 3</label>
+        <input type="text" id="subject33" placeholder="Subject Name">
+        <input type="number" id="credit33" placeholder="Credit">
+        <input type="number" id="mark33" placeholder="Enter Marks"><br><br>
+        <label>Subject 4</label>
+        <input type="text" id="subject34" placeholder="Subject Name">
+        <input type="number" id="credit34" placeholder="Credit">
+        <input type="number" id="mark34" placeholder="Enter Marks"><br><br>
+        <label>Subject 5</label>
+        <input type="text" id="subject35" placeholder="Subject Name">
+        <input type="number" id="credit35" placeholder="Credit">
+        <input type="number" id="mark35" placeholder="Enter Marks"><br><br>
+        <label>Subject 6</label>
+        <input type="text" id="subject36" placeholder="Subject Name">
+        <input type="number" id="credit36" placeholder="Credit">
+        <input type="number" id="mark36" placeholder="Enter Marks"><br><br>
+        <label>Practical 1 (1 credit)</label>
+        <input type="number" id="mark37" placeholder="Enter Marks"><br><br>
+        <label>Practical 2 (1 credit)</label>
+        <input type="number" id="mark38" placeholder="Enter Marks"><br><br>
+        <button onclick="calculateCGPA(3)">Calculate CGPA Semester 3</button>
+        
+        <h3>Semester Three Marks Details</h3>
+        <p id="totalmark3">Total Marks :</p>
+        <p id="obtainedmark3">Obtained Marks :</p>
+        <p id="cgpa3">CGPA :</p>
+        <p id="percentage3">Percentage :</p> <br>
+    </fieldset>
+
+    <!-- Semester 4 -->
+    <fieldset>
+        <h3>Semester Four</h3><br>
+        <label>Tamil (3 credits)</label>
+        <input type="number" id="mark41" placeholder="Enter Marks"><br><br>
+        <label>English (3 credits)</label>
+        <input type="number" id="mark42" placeholder="Enter Marks"><br><br>
+        <label>Subject 3</label>
+        <input type="text" id="subject43" placeholder="Subject Name">
+        <input type="number" id="credit43" placeholder="Credit">
+        <input type="number" id="mark43" placeholder="Enter Marks"><br><br>
+        <label>Subject 4</label>
+        <input type="text" id="subject44" placeholder="Subject Name">
+        <input type="number" id="credit44" placeholder="Credit">
+        <input type="number" id="mark44" placeholder="Enter Marks"><br><br>
+        <label>Subject 5</label>
+        <input type="text" id="subject45" placeholder="Subject Name">
+        <input type="number" id="credit45" placeholder="Credit">
+        <input type="number" id="mark45" placeholder="Enter Marks"><br><br>
+        <label>Subject 6</label>
+        <input type="text" id="subject46" placeholder="Subject Name">
+        <input type="number" id="credit46" placeholder="Credit">
+        <input type="number" id="mark46" placeholder="Enter Marks"><br><br>
+        <label>Practical 1 (1 credit)</label>
+        <input type="number" id="mark47" placeholder="Enter Marks"><br><br>
+        <label>Practical 2 (1 credit)</label>
+        <input type="number" id="mark48" placeholder="Enter Marks"><br><br>
+        <button onclick="calculateCGPA(4)">Calculate CGPA Semester 4</button>
+        
+        <h3>Semester Four Marks Details</h3>
+        <p id="totalmark4">Total Marks :</p>
+        <p id="obtainedmark4">Obtained Marks :</p>
+        <p id="cgpa4">CGPA :</p>
+        <p id="percentage4">Percentage :</p> <br>
+    </fieldset>
+
+    <!-- Semester 5 -->
+    <fieldset>
+        <h3>Semester Five</h3><br>
+        <label>Subject 1</label>
+        <input type="text" id="subject51" placeholder="Subject Name">
+        <input type="number" id="credit51" placeholder="Credit">
+        <input type="number" id="mark51" placeholder="Enter Marks"><br><br>
+        <label>Subject 2</label>
+        <input type="text" id="subject52" placeholder="Subject Name">
+        <input type="number" id="credit52" placeholder="Credit">
+        <input type="number" id="mark52" placeholder="Enter Marks"><br><br>
+        <label>Subject 3</label>
+        <input type="text" id="subject53" placeholder="Subject Name">
+        <input type="number" id="credit53" placeholder="Credit">
+        <input type="number" id="mark53" placeholder="Enter Marks"><br><br>
+        <label>Subject 4</label>
+        <input type="text" id="subject54" placeholder="Subject Name">
+        <input type="number" id="credit54" placeholder="Credit">
+        <input type="number" id="mark54" placeholder="Enter Marks"><br><br>
+        <label>Subject 5</label>
+        <input type="text" id="subject55" placeholder="Subject Name">
+        <input type="number" id="credit55" placeholder="Credit">
+        <input type="number" id="mark55" placeholder="Enter Marks"><br><br>
+        <label>Practical 1 (1 credit)</label>
+        <input type="number" id="mark56" placeholder="Enter Marks"><br><br>
+        <label>Practical 2 (1 credit)</label>
+        <input type="number" id="mark57" placeholder="Enter Marks"><br><br>
+        <button onclick="calculateCGPAForFifthAndSixthSemester(5)">Calculate CGPA Semester 5</button>
+        
+        <h3>Semester Five Marks Details</h3>
+        <p id="totalmark5">Total Marks :</p>
+        <p id="obtainedmark5">Obtained Marks :</p>
+        <p id="cgpa5">CGPA :</p>
+        <p id="percentage5">Percentage :</p> <br>
+    </fieldset>
+
+    <!-- Semester 6 -->
+    <fieldset>
+        <h3>Semester Six</h3><br>
+        <label>Subject 1</label>
+        <input type="text" id="subject61" placeholder="Subject Name">
+        <input type="number" id="credit61" placeholder="Credit">
+        <input type="number" id="mark61" placeholder="Enter Marks"><br><br>
+        <label>Subject 2</label>
+        <input type="text" id="subject62" placeholder="Subject Name">
+        <input type="number" id="credit62" placeholder="Credit">
+        <input type="number" id="mark62" placeholder="Enter Marks"><br><br>
+        <label>Subject 3</label>
+        <input type="text" id="subject63" placeholder="Subject Name">
+        <input type="number" id="credit63" placeholder="Credit">
+        <input type="number" id="mark63" placeholder="Enter Marks"><br><br>
+        <label>Subject 4</label>
+        <input type="text" id="subject64" placeholder="Subject Name">
+        <input type="number" id="credit64" placeholder="Credit">
+        <input type="number" id="mark64" placeholder="Enter Marks"><br><br>
+        <label>Subject 5</label>
+        <input type="text" id="subject65" placeholder="Subject Name">
+        <input type="number" id="credit65" placeholder="Credit">
+        <input type="number" id="mark65" placeholder="Enter Marks"><br><br>
+        <label>Practical 1 (1 credit)</label>
+        <input type="number" id="mark66" placeholder="Enter Marks"><br><br>
+        <label>Practical 2 (1 credit)</label>
+        <input type="number" id="mark67" placeholder="Enter Marks"><br><br>
+        <button onclick="calculateCGPAForFifthAndSixthSemester(6)">Calculate CGPA Semester 6</button>
+        
+        <h3>Semester Six Marks Details</h3>
+        <p id="totalmark6">Total Marks :</p>
+        <p id="obtainedmark6">Obtained Marks :</p>
+        <p id="cgpa6">CGPA :</p>
+        <p id="percentage6">Percentage :</p> <br>
+    </fieldset>
+    <script>
+    function calculateCGPA(semester) {
+        let totalCredits = 6; // Default credits for Tamil and English
+        let weightedMarksSum = 0;
+
+        // Calculate grade points for Tamil and English
+        for (let i = 1; i <= 2; i++) {
+            let marks = parseFloat(document.getElementById(`mark${semester}${i}`).value) || 0;
+
+            let gradePoint = getGradePoint(marks);
+            if (gradePoint === 0) {
+                alert('Fail in one or more subjects, CGPA cannot be calculated.');
+                return;
+            }
+            weightedMarksSum += gradePoint * 3; // 3 credits for Tamil and English
+        }
+
+        // Loop through other subjects
+        for (let i = 3; i <= 6; i++) {
+            let marks = parseFloat(document.getElementById(`mark${semester}${i}`).value) || 0;
+            let credits = parseFloat(document.getElementById(`credit${semester}${i}`).value) || 0;
+
+            let gradePoint = getGradePoint(marks);
+            if (gradePoint === 0) {
+                alert('Fail in one or more subjects, CGPA cannot be calculated.');
+                return;
+            }
+
+            weightedMarksSum += gradePoint * credits;
+            totalCredits += credits;
+        }
+
+        // Add practical marks
+        for (let j = 7; j <= 8; j++) {
+            let practicalMarks = parseFloat(document.getElementById(`mark${semester}${j}`).value) || 0;
+            let practicalConvertedMarks = practicalMarks * 2; // Convert 50 marks to 100 scale
+
+            let gradePoint = getGradePoint(practicalConvertedMarks);
+            if (gradePoint === 0) {
+                alert('Fail in practical, CGPA cannot be calculated.');
+                return;
+            }
+
+            weightedMarksSum += gradePoint * 1; // Each practical has 1 credit
+            totalCredits += 1;
+        }
+
+        // Calculate CGPA
+        let cgpa = weightedMarksSum / totalCredits;
+        document.getElementById(`totalmark${semester}`).innerText = `Total Credits: ${totalCredits}`;
+        document.getElementById(`cgpa${semester}`).innerText = `CGPA: ${cgpa.toFixed(2)}`;
+        document.getElementById(`percentage${semester}`).innerText = `Percentage: ${(cgpa * 9.5).toFixed(2)}%`;
+    }
+
+    function getGradePoint(marks) {
+        if (marks >= 90) return 10;
+        else if (marks >= 80) return 9;
+        else if (marks >= 70) return 8;
+        else if (marks >= 60) return 7;
+        else if (marks >= 50) return 6;
+        else if (marks >= 40) return 5;
+        return 0;
+    }
+    function calculateCGPAForFifthAndSixthSemester(semester) {
+    let totalCredits = 0;
+    let weightedMarksSum = 0;
+
+    // Loop through 5 subjects
+    for (let i = 1; i <= 5; i++) {
+        let marks = parseFloat(document.getElementById(`mark${semester}${i}`).value) || 0;
+        let credits = parseFloat(document.getElementById(`credit${semester}${i}`).value) || 0;
+
+        let gradePoint = getGradePoint(marks);
+        if (gradePoint === 0) {
+            alert('Fail in one or more subjects, CGPA cannot be calculated.');
+            return;
+        }
+
+        weightedMarksSum += gradePoint * credits;
+        totalCredits += credits;
+    }
+
+    // Add practical marks
+    for (let j = 6; j <= 7; j++) {
+        let practicalMarks = parseFloat(document.getElementById(`mark${semester}${j}`).value) || 0;
+        let practicalConvertedMarks = practicalMarks * 2; // Convert 50 marks to 100 scale
+
+        let gradePoint = getGradePoint(practicalConvertedMarks);
+        if (gradePoint === 0) {
+            alert('Fail in practical, CGPA cannot be calculated.');
+            return;
+        }
+
+        weightedMarksSum += gradePoint * 1; // Each practical has 1 credit
+        totalCredits += 1;
+    }
+
+    // Calculate CGPA
+    let cgpa = weightedMarksSum / totalCredits;
+    document.getElementById(`totalmark${semester}`).innerText = `Total Credits: ${totalCredits}`;
+    document.getElementById(`cgpa${semester}`).innerText = `CGPA: ${cgpa.toFixed(2)}`;
+    document.getElementById(`percentage${semester}`).innerText = `Percentage: ${(cgpa * 9.5).toFixed(2)}%`;
+}
+
+function getGradePoint(marks) {
+    if (marks >= 90) return 10;
+    else if (marks >= 80) return 9;
+    else if (marks >= 70) return 8;
+    else if (marks >= 60) return 7;
+    else if (marks >= 50) return 6;
+    else if (marks >= 40) return 5;
+    return 0;
+}
+    </script>
+
+</body>
+</html>
