@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stylish HTML Form Example</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style=" background: linear-gradient(to right, #f33838, #226e7a);">
+    <div class="form-container">
+        <h2>Stylish HTML Form</h2>
+        <form action="/submit" method="post" id="myForm">
+            <!-- Text Input -->
+            <div class="form-group">
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" name="fullName" placeholder="John Doe" required>
+            </div>
+            
+            <!-- Email Input -->
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="john.doe@example.com" required>
+            </div>
+            
+            <!-- Password Input -->
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="********" required>
+            </div>
+            
+            <!-- Number Input -->
+            <div class="form-group">
+                <label for="age">Age (18-100):</label>
+                <input type="number" id="age" name="age" min="18" max="100" placeholder="25" required>
+            </div>
+            
+            <!-- Radio Buttons in a Single Line -->
+            <div class="form-group">
+                <label>Gender:</label>
+                <div class="radio-group">
+                    <input type="radio" id="male" name="gender" value="male" required>
+                    <label for="male">Male</label>
+                    <input type="radio" id="female" name="gender" value="female">
+                    <label for="female">Female</label>
+                    <input type="radio" id="other" name="gender" value="other">
+                    <label for="other">Other</label>
+                </div>
+            </div>
+            
+            <!-- Textarea -->
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="4" placeholder="Your message here..." required></textarea>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Example client-side validation (additional to HTML5 attributes)
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            let age = document.getElementById('age').value;
+            if (age < 18 || age > 100) {
+                alert('Age must be between 18 and 100.');
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    </script>
+</body>
+</html>
