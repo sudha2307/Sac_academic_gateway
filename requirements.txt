@@ -3,4 +3,4 @@ Flask-SQLAlchemy==2.5.1
 Werkzeug==2.1.0
 gunicorn
 requests
-BeautifulSoup
+beautifulsoup4==4.12.2  # or the latest version
