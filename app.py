@@ -33,7 +33,7 @@ def create_tables():
 # Home route
 @app.route('/')
 def home():
-    return render_template('LOGIN.html')
+    return render_template('login.html')
 
 # Login route
 @app.route('/login', methods=['GET', 'POST'])
