@@ -1,18 +1,21 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate 
 from scrape_results import get_results
 
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://sac_data_user:a7Xx7eWHJXGsxzpRhoFvpMi0bmwe0lwW@dpg-cr8vse5svqrc739hat90-a/sac_data'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://sac_data_user:a7Xx7eWHJXGsxzpRhoFvpMi0bmwe0lwW@dpg-cr8vse5svqrc739hat90-a.singapore-postgres.render.com/sac_data'
+
 
 # Set the SECRET_KEY directly
 app.config['SECRET_KEY'] = '452c455e9533ee85071833a704fa2c97'
-# Use your actual database
+# Use your actual database# Use your actual database
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # User model to store user information
 class User(db.Model):
@@ -30,7 +33,7 @@ def create_tables():
 # Home route
 @app.route('/')
 def home():
-    return render_template('login.html')
+    return render_template('LOGIN.html')
 
 # Login route
 @app.route('/login', methods=['GET', 'POST'])
