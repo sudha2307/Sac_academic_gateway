@@ -1,29 +1,43 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate 
+from flask_migrate import Migrate
 from scrape_results import get_results
-
+from werkzeug.utils import secure_filename
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 import datetime
 
 app = Flask(__name__)
+
+# Configurations
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://sac_data_user:a7Xx7eWHJXGsxzpRhoFvpMi0bmwe0lwW@dpg-cr8vse5svqrc739hat90-a.singapore-postgres.render.com/sac_data'
-
-
-# Set the SECRET_KEY directly
 app.config['SECRET_KEY'] = '452c455e9533ee85071833a704fa2c97'
-# Use your actual database# Use your actual database
+app.config['UPLOAD_FOLDER'] = 'static/avatars'
+
+# Initialize database and migration
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+# Initialize Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 # User model to store user information
-class User(db.Model):
+class User(db.Model , UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
     department = db.Column(db.String(150), nullable=False)
+    avatar = db.Column(db.String(150), nullable=True)  # Field to store avatar filename
+
+# User loader function for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # Function to create tables
 def create_tables():
@@ -43,6 +57,7 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
+            login_user(user)
             session['user_id'] = user.id
             flash('Login Successful', 'success')
             return redirect(url_for('dashboard'))
@@ -76,28 +91,49 @@ def register():
 
 # Dashboard route
 @app.route('/dashboard')
+@login_required
 def dashboard():
-    if 'user_id' not in session:
-        flash('You need to log in first', 'warning')
-        return redirect(url_for('login'))
-    
-    user = User.query.get(session['user_id'])
     current_time = datetime.datetime.now()
-    return render_template('dashboard.html', name=user.name, username=user.username, department=user.department, current_time=current_time)
+    avatar_url = url_for('static', filename='avatars/' + current_user.avatar) if current_user.avatar else url_for('static', filename='avatars/download (1).jpeg')
+    return render_template('dashboard.html', name=current_user.name, username=current_user.username, department=current_user.department, current_time=current_time, avatar_url=avatar_url)
+
+# Update avatar route
+@app.route('/update_avatar', methods=['POST'])
+@login_required
+def update_avatar():
+    user = current_user
+    response = {'success': False}
+
+    # Handle file upload
+    if 'profile_image' in request.files:
+        file = request.files['profile_image']
+        if file and file.filename:
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+            user.avatar = filename
+            response['success'] = True
+
+    # Handle sample avatar URL
+    if 'selected_avatar' in request.form:
+        user.avatar = request.form['selected_avatar']
+        response['success'] = True
+
+    db.session.commit()
+    return jsonify(response)
+
 
 # Profile route
 @app.route('/profile')
+@login_required
 def profile():
-    if 'user_id' not in session:
-        flash('You need to log in first', 'warning')
-        return redirect(url_for('login'))
-
-    user = User.query.get(session['user_id'])
-    return render_template('profile.html', name=user.name, username=user.username, department=user.department)
+    return render_template('profile.html', name=current_user.name, username=current_user.username, department=current_user.department)
 
 # Logout route
 @app.route('/logout')
+@login_required
 def logout():
+    logout_user()
     session.pop('user_id', None)
     flash('You have been logged out', 'info')
     return redirect(url_for('login'))
@@ -124,7 +160,6 @@ def get_result():
     results = get_results(reg_no, exam)
     return render_template('result.html', results=results)
 
-
 # CGPA Calculator route
 @app.route('/cgpa_calculator')
 def cgpa_calculator():
@@ -140,7 +175,7 @@ def time_table():
 def academic_calender():
     return render_template('academic_calender.html')
 
-
+# Main entry point
 if __name__ == '__main__':
-    create_tables()  # Create tables if not exist
+    create_tables()  # Create tables if they don't exist
     app.run(debug=True)
