@@ -91,7 +91,7 @@
 
         h2 {
             margin-bottom: 20px;
-            font-size: 20px;
+            font-size: 14px;
             text-align: center;
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
             
@@ -158,15 +158,17 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            line-height: 1.2;
             
         }
 
         .profile-card {
             display: flex;
             align-items: center;
-            width: 75vw;
+            width: 60vw;
+            height:auto;
             max-width: 650px;
-            padding: 50px 30px 50px 20px;
+            padding: 40px 10px 50px 10px;
             background: #121017;
             border-radius: 24px;
             box-shadow: 0 8px 60px rgba(0, 0, 0, 0.12);
@@ -212,9 +214,9 @@
             border: 1px solid #f8f8f8;
             background: transparent;
             color: #f8f8f8;
-            width: 40%;
+            width: 20%;
             min-width: 100px;
-            padding: 12px 26px;
+            padding: 10px 20px;
             border-radius: 40px;
             cursor: pointer;
             transition: 0.3s;
@@ -241,7 +243,7 @@
             }
 
             .profile-card .profile-buttons button {
-                width: 50%;
+                width: 10%;
             }
 
             .profile-card h2 {
@@ -388,6 +390,38 @@
         .modal button:hover {
             background-color: #45a049;
         }
+        .attendance-summary {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.attendance-box {
+    width: 60px;  /* Smaller width */
+    height: 30px; /* Smaller height */
+    padding: 5px; /* Reduced padding */
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-size: 10px; /* Smaller font size */
+    line-height: 1.2; /* Adjust line height for vertical alignment */
+}
+
+.present-box {
+    background-color: #4CAF50; /* Green */
+}
+
+.absent-box {
+    background-color: #FF5252; /* Red */
+}
+
+.od-box {
+    background-color: #FFC107; /* Amber */
+}
+
+
+
     </style>
 </head>
 <body>
@@ -409,7 +443,7 @@
             </div>
         </div>
     
-        <h1 style="text-align: center;">Sadakathullah Appa College (Autonomous)</h1>
+        <h1 style="text-align: center;">Sadakathullah Appa College</h1>
     
         <button style="border-radius: 5px; cursor: pointer;" class="logout-btn" onclick="window.location.href='{{ url_for('logout') }}'" class="primary">
             <i style="font-size: 12px;" class="fas fa-arrow-right-from-bracket"></i> 
@@ -430,11 +464,27 @@
         <div class="profile-card">
             <img id="currentAvatar" src="{{ avatar_url }}" alt="Current Avatar">
 
+
             <div>
                 <h2>{{ name }}</h2>
                 <h3>{{ department }}</h3>
                 <p>Register No: {{ username }}</p>
                 <p style="margin: 0; padding-top: 0;">Day order : <div class="day-order" id="day-order"></div></p>
+                <p style="margin: 0; padding-top: 0;">Attendance Details :</Details></p>
+                <div class="attendance-summary">
+                    <div class="attendance-box present-box">
+                        Present<br>
+                        {{ total_present }}
+                    </div>
+                    <div class="attendance-box absent-box">
+                        Absent<br>
+                        {{ total_absent }}
+                    </div>
+                    <div class="attendance-box od-box">
+                        OD<br>
+                        {{ total_od }}
+                    </div>
+                </div>
                 
                 
                 <div class="profile-buttons">
@@ -450,9 +500,9 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Edit Profile</h2>
-            <img id="currentAvatar" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAMAAABGze7rAAAAllBMVEUAAABjxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP9gxP+Iy2umAAAAHnRSTlMA9E3cn6L3b9cc/fXbC17J9uTxU1KHgXeggrZ4XFy8AAAKFSURBVFjD7ZhJcsMgDMS5EM3ZMJxzDff/v4IgGlAAkO0m+61m7pqDRNZrbHzK3gbVSkM3GRAqXEkURoO0R4DhZFA6qqFUuDlEmgRGiBGCoiQi1JcIxq8JCFGVqSPDzKaH4gMJE6McpvpaGqepNQWC7CmLqVRExbFdBo+0HINzIcRxGRxzqGkIGcGohoQFghkLKeC2BRuMsFzoRHrEEkOuogbIMKeFzTA3VEeqShvFTf3huUBlX6yo8EcRXeg3FU+jsONCFbIoS0g61dP5S4DFTxArNRvEIm5wTZkDth5RU8Q6V7QyHdRw8WxUVgxlmQ6ExGV8TFTOjCIy4zrguM8h60aOcsUhzpCO6PQGVCOOMZnbcRKjCBEmKe1mRoeDDmi+1UBNKhY2pVGZDE+nX9MyjznBtdDYiR10HEzkpFkLnQ5iKaMxPbw8R6NDEqjCNO4MSuwD0sbAqZ4lGJZ0l4Uk4wBJXHjpNKDkmOOWIAbFNfbYZkSaoBDTtZJaKo0hKkzwCI+1Nk+nJHEZg8kcEkka0wZT3kE0eFCR6INszR5aGCWxhGnzoKa0XxzSc+GeWEueE/ZI4xuhhhM6y+jEFH1QmjM9RmrxJHOMQ4IbbE+9Q3nnZ9GvBOjtR0Zkp4skdpOBw3zE+NAR6mO6d5p/ZOHMIq9DFOR60ADtz4NoVgBJfBD+6MMkRpw0B8ybw2iyDeDMH0xD1mAReByDO9+Vjgs2YEm+fS2Vx5wvPaAwj7MULV1f5bmgcAWbr2EGZQXgk5E7gZGgjckZxA5q7pEMmgs0JQflFs5mrSRLMiTjbyaG4/kBKmGVE2XHg7uoTp9M0k1Q7b9Sw4E4dNHRqB/GZy0yDylG8chUXZEBtpcSPlT8Jgt0dHHmm2mYIw5XTFx9xbEQD3wI7QGwsigxRfE0Kh5B1gNkv1At49j0s19liHw0ghYOZ3gt5u5P7HNe/MRtUUmECbANMX43vdd//Q78A80sHD7KN1v0AAAAASUVORK5CYII=" alt="Current Avatar">
+            <img id="currentAvatar" src="{{avatar_url }}" alt="Current Avatar">
             <div class="sample-avatars">
-                <img src="{{ url_for('static', filename='avatars/download (1).jpeg') }}" alt="Sample Avatar 1">
+                <img src="{{ url_for('static', filename='avatars/download(1).jpeg') }}" alt="Sample Avatar 1">
                 <img src="{{ url_for('static', filename='avatars/download.jpeg') }}" alt="Sample Avatar 2">
                 <img src="{{ url_for('static', filename='avatars/images.jpeg') }}" alt="Sample Avatar 3">
             </div>
@@ -479,66 +529,51 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    var modal = document.getElementById("editProfileModal");
-    var btn = document.getElementById("editProfileBtn");
-    var span = document.getElementsByClassName("close")[0];
-    var avatarUpload = document.getElementById("avatarUpload");
-    var currentAvatar = document.getElementById("currentAvatar");
-    var selectedAvatar = '';
+    // Show the modal
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    const modal = document.getElementById('editProfileModal');
+    const closeBtn = document.querySelector('.modal .close');
 
-    btn.onclick = function() {
-        modal.style.display = "block";
+    editProfileBtn.onclick = function() {
+        modal.style.display = 'flex';
     }
 
-    span.onclick = function() {
-        modal.style.display = "none";
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
     }
 
+    // Hide modal if clicked outside
     window.onclick = function(event) {
         if (event.target == modal) {
-            modal.style.display = "none";
+            modal.style.display = 'none';
         }
     }
 
-    document.querySelectorAll('.sample-avatars img').forEach(function(img) {
-        img.addEventListener('click', function() {
-            selectedAvatar = img.src;
-            currentAvatar.src = selectedAvatar;
-        });
+    // Handle sample avatar click
+    const sampleAvatars = document.querySelectorAll('.sample-avatars img');
+    sampleAvatars.forEach(avatar => {
+        avatar.onclick = function() {
+            document.getElementById('currentAvatar').src = this.src;
+            document.querySelector('#editProfileModal').style.display = 'none';
+            // Optionally send an AJAX request to update the avatar in the backend
+            // Example: sendUpdateAvatarRequest(this.src);
+        }
     });
 
-    document.getElementById('saveChangesBtn').addEventListener('click', function() {
-        const formData = new FormData();
-
-        if (avatarUpload.files.length > 0) {
-            formData.append('profile_image', avatarUpload.files[0]);
-        }
-
-        if (selectedAvatar) {
-            formData.append('selected_avatar', selectedAvatar);
-        }
-
-        fetch('/update_avatar', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById('editProfileModal').style.display = 'none';
-                alert('Avatar updated successfully!');
-                // Optionally, reload the page or update the avatar on the page dynamically
-            } else {
-                alert('Failed to update avatar. Please try again.');
+    // Handle file upload
+    document.querySelector('.modal input[type="file"]').onchange = function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('currentAvatar').src = e.target.result;
+                // Optionally send an AJAX request to update the avatar in the backend
+                // Example: sendUpdateAvatarRequest(e.target.result);
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to update avatar. Please try again.');
-        });
-    });
+            reader.readAsDataURL(file);
+        }
+    };
 });
-
 
          function updateClock() {
     const now = new Date();
