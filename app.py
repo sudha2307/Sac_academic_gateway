@@ -261,9 +261,9 @@ def attendance():
                 url = 'https://www.sadakath.ac.in/attendance2.aspx'
                 viewstate, viewstate_generator, event_validation = fetch_hidden_fields(url)
                 attendance_details = get_attendance_details(url, reg_no, viewstate, viewstate_generator, event_validation)
-                total_present = sum(int(record['Present']) for record in attendance_details['Records'])
-                total_absent = sum(int(record['Absent']) for record in attendance_details['Records'])
-                total_od = sum(int(record['OD']) for record in attendance_details['Records'])
+                total_present = sum(float(record['Present']) for record in attendance_details['Records'])
+                total_absent = sum(float(record['Absent']) for record in attendance_details['Records'])
+                total_od = sum(float(record['OD']) for record in attendance_details['Records'])
 
                 return render_template('attendance_results.html', attendance_details=attendance_details, total_present=total_present, total_absent=total_absent, total_od=total_od)
 
