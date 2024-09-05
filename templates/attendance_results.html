@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .attendance-summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+
+        .attendance-box {
+            width: 150px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .present-box {
+            background-color: #4CAF50; /* Green */
+        }
+
+        .absent-box {
+            background-color: #FF5252; /* Red */
+        }
+
+        .od-box {
+            background-color: #FFC107; /* Amber */
+        }
+
+        .attendance-details table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .attendance-details th, .attendance-details td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .attendance-details th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .chart-container {
+            width: 100%;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .chart-container canvas {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>Attendance Summary for {{ attendance_details['Name'] }}</h2>
+    
+    <!-- Attendance Summary Boxes -->
+    <div class="attendance-summary">
+        <div class="attendance-box present-box">
+            Present<br>
+            {{ total_present }}
+        </div>
+        <div class="attendance-box absent-box">
+            Absent<br>
+            {{ total_absent }}
+        </div>
+        <div class="attendance-box od-box">
+            OD<br>
+            {{ total_od }}
+        </div>
+    </div>
+
+    <!-- Attendance Details Table -->
+    <div class="attendance-details">
+        <h3>Attendance Details</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Course Code</th>
+                    <th>Subject Name</th>
+                    <th>Total</th>
+                    <th>Present</th>
+                    <th>Absent</th>
+                    <th>OD</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance_details['Records'] %}
+                <tr>
+                    <td>{{ record['CCode'] }}</td>
+                    <td>{{ record['SName'] }}</td>
+                    <td>{{ record['Total'] }}</td>
+                    <td>{{ record['Present'] }}</td>
+                    <td>{{ record['Absent'] }}</td>
+                    <td>{{ record['OD'] }}</td>
+                    <td>{{ record['Percentage'] }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pie Chart Representation -->
+    <div class="chart-container">
+        <h3>Attendance Distribution</h3>
+        <canvas id="attendancePieChart"></canvas>
+    </div>
+</div>
+
+<script>
+    // Attendance data for Pie Chart
+    var present = {{ total_present }};
+    var absent = {{ total_absent }};
+    var od = {{ total_od }};
+
+    // Pie chart rendering using Chart.js
+    var ctx = document.getElementById('attendancePieChart').getContext('2d');
+    var attendancePieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Present', 'Absent', 'OD'],
+            datasets: [{
+                data: [present, absent, od],
+                backgroundColor: ['#4CAF50', '#FF5252', '#FFC107'],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
