@@ -2,14 +2,16 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from scrape_results import get_results
+from scrape_results import get_results  # Ensure this is correctly implemented or adjust as needed
 from werkzeug.utils import secure_filename
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 import datetime
+import requests
+from bs4 import BeautifulSoup
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 # Configurations
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://sac_data_user:a7Xx7eWHJXGsxzpRhoFvpMi0bmwe0lwW@dpg-cr8vse5svqrc739hat90-a.singapore-postgres.render.com/sac_data'
@@ -26,7 +28,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # User model to store user information
-class User(db.Model , UserMixin):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
     username = db.Column(db.String(150), unique=True, nullable=False)
@@ -43,6 +45,56 @@ def load_user(user_id):
 def create_tables():
     with app.app_context():
         db.create_all()
+
+# Function to fetch hidden fields
+def fetch_hidden_fields(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    viewstate = soup.find('input', {'name': '__VIEWSTATE'})['value']
+    viewstate_generator = soup.find('input', {'name': '__VIEWSTATEGENERATOR'})['value']
+    event_validation = soup.find('input', {'name': '__EVENTVALIDATION'})['value']
+    
+    return viewstate, viewstate_generator, event_validation
+
+# Function to get attendance details
+def get_attendance_details(url, reg_no, viewstate, viewstate_generator, event_validation):
+    payload = {
+        '__VIEWSTATE': viewstate,
+        '__VIEWSTATEGENERATOR': viewstate_generator,
+        '__EVENTVALIDATION': event_validation,
+        'TxtRegno': reg_no,
+        'Button1': 'Submit'
+    }
+    
+    response = requests.post(url, data=payload)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    result = {}
+    result['AdminNo'] = soup.find('span', {'id': 'Label1'}).text.strip()
+    result['Name'] = soup.find('span', {'id': 'Label2'}).text.strip()
+    
+    table = soup.find('table', {'id': 'GridView1'})
+    if table:
+        rows = table.find_all('tr')[1:]
+        result['Records'] = []
+        for row in rows:
+            columns = row.find_all('td')
+            record = {
+                'CCode': columns[0].text.strip(),
+                'Semno': columns[1].text.strip(),
+                'RegNo': columns[2].text.strip(),
+                'AdmnNo': columns[3].text.strip(),
+                'SName': columns[4].text.strip(),
+                'Total': columns[5].text.strip(),
+                'Present': columns[6].text.strip(),
+                'Absent': columns[7].text.strip(),
+                'OD': columns[8].text.strip(),
+                'Percentage': columns[9].text.strip()
+            }
+            result['Records'].append(record)
+    
+    return result
 
 # Home route
 @app.route('/')
@@ -89,13 +141,42 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html')
 
-# Dashboard route
 @app.route('/dashboard')
 @login_required
 def dashboard():
+    # Fetch current time and avatar
     current_time = datetime.datetime.now()
-    avatar_url = url_for('static', filename='avatars/' + current_user.avatar) if current_user.avatar else url_for('static', filename='avatars/download (1).jpeg')
-    return render_template('dashboard.html', name=current_user.name, username=current_user.username, department=current_user.department, current_time=current_time, avatar_url=avatar_url)
+    avatar_filename = current_user.avatar or 'default_avatar.jpg'
+    avatar_url = url_for('static', filename=f'avatars/{avatar_filename}')
+
+    # Get attendance details from the external source
+    try:
+        attendance_details = get_attendance_details('https://www.sadakath.ac.in/attendance2.aspx', current_user.username, *fetch_hidden_fields('https://www.sadakath.ac.in/attendance2.aspx'))
+    except Exception as e:
+        return f"Error fetching attendance details: {e}"
+
+    # Check if 'Records' key exists in attendance_details
+    if 'Records' not in attendance_details:
+        return "Error: 'Records' key not found in attendance details"
+
+    # Calculate totals for present, absent, and OD with error handling
+    try:
+        total_present = sum(float(record.get('Present', 0)) for record in attendance_details['Records'])
+        total_absent = sum(float(record.get('Absent', 0)) for record in attendance_details['Records'])
+        total_od = sum(float(record.get('OD', 0)) for record in attendance_details['Records'])
+    except ValueError as e:
+        return f"Error processing attendance data: {e}"
+
+    # Render the dashboard template with the required data
+    return render_template('dashboard.html', 
+                           name=current_user.name, 
+                           username=current_user.username, 
+                           department=current_user.department, 
+                           current_time=current_time, 
+                           avatar_url=avatar_url, 
+                           total_present=total_present, 
+                           total_absent=total_absent, 
+                           total_od=total_od)
 
 # Update avatar route
 @app.route('/update_avatar', methods=['POST'])
@@ -105,8 +186,8 @@ def update_avatar():
     response = {'success': False}
 
     # Handle file upload
-    if 'profile_image' in request.files:
-        file = request.files['profile_image']
+    if 'avatarUpload' in request.files:
+        file = request.files['avatarUpload']
         if file and file.filename:
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -121,7 +202,6 @@ def update_avatar():
 
     db.session.commit()
     return jsonify(response)
-
 
 # Profile route
 @app.route('/profile')
@@ -143,10 +223,6 @@ def logout():
 def about():
     return render_template('about.html')
 
-# Attendance route
-@app.route('/attendance')
-def attendance():
-    return render_template('attendance.html')
 
 # Results route
 @app.route('/result')
@@ -174,6 +250,27 @@ def time_table():
 @app.route('/academic_calender')
 def academic_calender():
     return render_template('academic_calender.html')
+
+# Combined attendance results route
+@app.route('/attendance', methods=['GET', 'POST'])
+def attendance():
+    if request.method == 'POST':
+        reg_no = request.form.get('reg_no')
+        if reg_no:
+            try:
+                url = 'https://www.sadakath.ac.in/attendance2.aspx'
+                viewstate, viewstate_generator, event_validation = fetch_hidden_fields(url)
+                attendance_details = get_attendance_details(url, reg_no, viewstate, viewstate_generator, event_validation)
+                total_present = sum(int(record['Present']) for record in attendance_details['Records'])
+                total_absent = sum(int(record['Absent']) for record in attendance_details['Records'])
+                total_od = sum(int(record['OD']) for record in attendance_details['Records'])
+
+                return render_template('attendance_results.html', attendance_details=attendance_details, total_present=total_present, total_absent=total_absent, total_od=total_od)
+
+            except Exception as e:
+                return render_template('attendance_results.html', error=str(e))
+    
+    return render_template('attendance_results_form.html')
 
 # Main entry point
 if __name__ == '__main__':
