@@ -118,29 +118,41 @@ def login():
     return render_template('login.html')
 
 # Register route
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        # Extract form data
         name = request.form['name']
         username = request.form['username']
         password = request.form['password']
         department = request.form['department']
+        avatar = request.form.get('avatar')  # Get the selected avatar or use a default value
 
         # Check if username already exists
-        if User.query.filter_by(username=username).first():
-            flash('Username already taken', 'danger')
+        existing_user = User.query.filter_by(username=username).first()
+        
+        if existing_user:
+            # Username already taken
+            flash('Username already exists. Please choose a different one.', 'error')
             return redirect(url_for('register'))
 
-        # Hash the password and save the new user
+        # Hash the password before saving to the database
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        new_user = User(name=name, username=username, password=hashed_password, department=department)
+
+        # Create new user object
+        new_user = User(name=name, username=username, password=hashed_password, department=department, avatar=avatar)
+
+        # Add user to the database
         db.session.add(new_user)
         db.session.commit()
 
-        flash('Registration successful. Please log in.', 'success')
+        # Success message and redirect to login
+        flash('Registration successful! Please login.', 'success')
         return redirect(url_for('login'))
-    return render_template('register.html')
 
+    # If GET request, render the registration form
+    return render_template('register.html')
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -151,21 +163,27 @@ def dashboard():
 
     # Get attendance details from the external source
     try:
-        attendance_details = get_attendance_details('https://www.sadakath.ac.in/attendance2.aspx', current_user.username, *fetch_hidden_fields('https://www.sadakath.ac.in/attendance2.aspx'))
+        attendance_details = get_attendance_details(
+            'https://www.sadakath.ac.in/attendance2.aspx', 
+            current_user.username, 
+            *fetch_hidden_fields('https://www.sadakath.ac.in/attendance2.aspx')
+        )
     except Exception as e:
-        return f"Error fetching attendance details: {e}"
+        # If there's an error fetching attendance, set default values
+        attendance_details = None
 
     # Check if 'Records' key exists in attendance_details
-    if 'Records' not in attendance_details:
-        return "Error: 'Records' key not found in attendance details"
-
-    # Calculate totals for present, absent, and OD with error handling
-    try:
-        total_present = sum(float(record.get('Present', 0)) for record in attendance_details['Records'])
-        total_absent = sum(float(record.get('Absent', 0)) for record in attendance_details['Records'])
-        total_od = sum(float(record.get('OD', 0)) for record in attendance_details['Records'])
-    except ValueError as e:
-        return f"Error processing attendance data: {e}"
+    if attendance_details and 'Records' in attendance_details:
+        try:
+            total_present = sum(float(record.get('Present', 0)) for record in attendance_details['Records'])
+            total_absent = sum(float(record.get('Absent', 0)) for record in attendance_details['Records'])
+            total_od = sum(float(record.get('OD', 0)) for record in attendance_details['Records'])
+        except ValueError as e:
+            # In case of any processing error, set default values
+            total_present = total_absent = total_od = "-"
+    else:
+        # If 'Records' are not found, set the values to "-"
+        total_present = total_absent = total_od = "-"
 
     # Render the dashboard template with the required data
     return render_template('dashboard.html', 
