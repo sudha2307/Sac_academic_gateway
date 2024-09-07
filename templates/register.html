@@ -112,29 +112,26 @@
         }
 
         .department-list {
-    display: none; /* Hide the list by default */
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 150px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #d4089e;
-    position: absolute;
-    width: 100%;
-    z-index: 1;
-    box-sizing: border-box;
-    scrollbar-width: thin; /* For Firefox */
-    scrollbar-color: #ccc #fff; /* For Firefox */
-}
+            display: none; /* Hide the list by default */
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #d4089e;
+            position: absolute;
+            width: 100%;
+            z-index: 1;
+            box-sizing: border-box;
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: #ccc #fff; /* For Firefox */
+        }
 
-.search-container:hover .department-list {
-    display: block; /* Show the list when hovering over the search container */
-}
-
-/* Other existing styles */
-
+        .search-container:hover .department-list {
+            display: block; /* Show the list when hovering over the search container */
+        }
 
         .department-list li {
             padding: 10px;
@@ -154,10 +151,6 @@
             border-bottom: none;
         }
 
-        .department-container:hover .department-list {
-            display: block; /* Show the list when the container is hovered */
-        }
-
         .department-list::-webkit-scrollbar {
             width: 8px;
         }
@@ -170,7 +163,71 @@
         .department-list::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.2);
         }
-        
+
+        .avatar-dropdown {
+            display: inline-flex;
+            align-items: center; /* Vertically align items */
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .avatar-dropdown label {
+            margin-right: 10px; /* Add some space between the label and the dropdown */
+        }
+
+        .avatar-box {
+            position: absolute;
+            z-index: 1;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            padding: 10px;
+            display: none;
+            width: 100%; /* Adjust width as needed */
+            max-width: 250px; /* Set a max width to constrain the container */
+            overflow: hidden;
+        }
+
+        .avatar-scroll-container {
+            display: flex;
+            overflow-x: auto;
+            max-width: 250px; /* Adjust this width to your needs */
+            padding: 5px 0;
+            scroll-behavior: smooth; /* Smooth scrolling */
+        }
+
+        .avatar-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%; /* Make avatars round */
+            margin: 5px;
+        }
+
+        .avatar-toggle {
+            cursor: pointer;
+            color: #000;
+            font-size: 16px;
+        }
+
+        .avatar-scroll-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .avatar-scroll-container::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 4px;
+        }
+
+        .avatar-scroll-container::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
+
+        .selected-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid #fff;
+        }
     </style>
 </head>
 <body>
@@ -180,7 +237,7 @@
     </header>
     <div class="container">
         <h1>Register</h1>
-        <form method="POST" action="{{ url_for('register') }}">
+        <form method="POST" action="{{ url_for('register') }}" enctype="multipart/form-data">
             <label for="name">Name :</label>
             <input type="text" id="name" name="name" required style="text-transform: uppercase;">
 
@@ -199,17 +256,64 @@
                 <ul id="departmentList" class="department-list"></ul>
             </div>
             <input type="hidden" id="department" name="department">
-            
+            <label for="avatar">Choose an avatar for : <p id="sname"></p></label>
+            <!-- Avatar selection -->
+            <div class="avatar-dropdown">
+                <img id="selectedAvatar" class="selected-avatar" src="{{ url_for('static', filename='avatars/default.jpeg') }}" alt="Selected Avatar">
+                <span class="avatar-toggle">Select Avatar ▼</span>
+                <div class="avatar-box">
+                    <div class="avatar-scroll-container">
+                        <label>
+                            <input type="radio" name="avatar" value="download.jpeg">
+                            <img src="{{ url_for('static', filename='avatars/download.jpeg') }}" alt="Avatar 1" class="avatar-image">
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" value="download (1).jpeg">
+                            <img src="{{ url_for('static', filename='avatars/download (1).jpeg') }}" alt="Avatar 1" class="avatar-image">
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" value="avatar1.png">
+                            <img src="{{ url_for('static', filename='avatars/avatar1.png') }}" alt="Avatar 2" class="avatar-image">
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" value="avatar4.jpg">
+                            <img src="{{ url_for('static', filename='avatars/avatar4.jpg') }}" alt="Avatar 3" class="avatar-image">
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" value="avatar5.jpg">
+                            <img src="{{ url_for('static', filename='avatars/avatar5.jpg') }}" alt="Avatar 3" class="avatar-image">
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" value="avatar6.jpg">
+                            <img src="{{ url_for('static', filename='avatars/avatar6.jpg') }}" alt="Avatar 3" class="avatar-image">
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" value="avatar7.jpg">
+                            <img src="{{ url_for('static', filename='avatars/avatar7.jpg') }}" alt="Avatar 3" class="avatar-image">
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" value="avatar8.jpg">
+                            <img src="{{ url_for('static', filename='avatars/avatar8.jpg') }}" alt="Avatar 3" class="avatar-image">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br>
+
             <input type="submit" value="Register">
         </form>
         {% if message %}
         <p class="message">{{ message }}</p>
         {% endif %}
     </div>
-
     <script>
+        document.querySelector('.avatar-toggle').addEventListener('click', function() {
+            const avatarBox = document.querySelector('.avatar-box');
+            avatarBox.style.display = avatarBox.style.display === 'none' ? 'block' : 'none';
+        });
+
         const departments = [
-            "B.Sc. Information Technology (I year)", "B.Sc. Information Technology (II year)", "B.Sc. Information Technology (III year)",
+        "B.Sc. Information Technology (I year)", "B.Sc. Information Technology (II year)", "B.Sc. Information Technology (III year)",
         "B.A. English (I year)", "B.A. English (II year)", "B.A. English (III year)",
             "B.A. History (I year)", "B.A. History (II year)", "B.A. History (III year)",
             "B.Com. (I year)", "B.Com. (II year)", "B.Com. (III year)",
@@ -245,6 +349,7 @@
             "M.A. History (I year)", "M.A. History (II year)",
             "M.Com. (I year)", "M.Com. (II year)",
             "M.A. English (I year)", "M.A. English (II year)"
+            
         ];
 
         const departmentList = document.getElementById('departmentList');
@@ -283,8 +388,20 @@
             togglePassword.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
         }
 
+        // Handle avatar selection
+        document.querySelectorAll('.avatar-box input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const selectedAvatarSrc = this.nextElementSibling.src;
+                document.getElementById('selectedAvatar').src = selectedAvatarSrc;
+                document.querySelector('.avatar-box').style.display = 'none';
+            });
+        });
+
+
         // Initialize department list display
         displayDepartments(departments);
+
+        
     </script>
 </body>
 </html>
