@@ -95,6 +95,20 @@ def get_attendance_details(url, reg_no, viewstate, viewstate_generator, event_va
             result['Records'].append(record)
     
     return result
+# Route to fetch student name based on registration number
+@app.route('/get_student_name', methods=['POST'])
+def get_student_name():
+    reg_number = request.json.get('reg_number').upper()
+
+    # Fetch attendance details to get the student name
+    attendance_details = get_attendance_details(
+        'https://www.sadakath.ac.in/attendance2.aspx',
+        reg_number,
+        *fetch_hidden_fields('https://www.sadakath.ac.in/attendance2.aspx')
+    )
+    student_name = attendance_details.get('Name', 'Unknown')  # Extract student name
+
+    return jsonify({'student_name': student_name})
 
 # Home route
 @app.route('/')
@@ -121,44 +135,48 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    student_name = ''
+    
     if request.method == 'POST':
         # Extract form data
-        name = request.form['name']
-        username = request.form['username']
+        reg_number = request.form['username'].upper()  # Assuming username is the registration number
+
+        # Fetch attendance details to get the student name
+        attendance_details = get_attendance_details(
+            'https://www.sadakath.ac.in/attendance2.aspx',
+            reg_number,
+            *fetch_hidden_fields('https://www.sadakath.ac.in/attendance2.aspx')
+        )
+        student_name = attendance_details.get('Name', 'Unknown')  # Extract student name
+
+        # Process form submission logic here if needed (e.g., saving the student)
+
+        # Extract other form data
         password = request.form['password']
         department = request.form['department']
-        avatar = request.form.get('avatar')  # Get the selected avatar or use a default value
-
-        # Check if username already exists
-        existing_user = User.query.filter_by(username=username).first()
-        
-        if existing_user:
-            # Username already taken
-            flash('Username already exists. Please choose a different one.', 'error')
-            return redirect(url_for('register'))
-
-        # Hash the password before saving to the database
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
 
-        # Create new user object
-        new_user = User(name=name, username=username, password=hashed_password, department=department, avatar=avatar)
+        # Check if user already exists
+        existing_user = User.query.filter_by(username=reg_number).first()
+        if existing_user:
+            flash('Username already exists!', 'error')
+            return render_template('register.html', student_name=student_name)
 
-        # Add user to the database
+        # Create new user
+        new_user = User(name=student_name, username=reg_number, password=hashed_password, department=department)
         db.session.add(new_user)
         db.session.commit()
 
-        # Success message and redirect to login
-        flash('Registration successful! Please login.', 'success')
+        flash('Registration successful!', 'success')
         return redirect(url_for('login'))
-
-    # If GET request, render the registration form
-    return render_template('register.html')
+    
+    return render_template('register.html', student_name=student_name)
 @app.route('/dashboard')
 @login_required
 def dashboard():
     # Fetch current time and avatar
     current_time = datetime.datetime.now()
-    avatar_filename = current_user.avatar or 'default_avatar.jpg'
+    avatar_filename = current_user.avatar or url_for('static', filename='avatars/default.jpeg')
     avatar_url = url_for('static', filename=f'avatars/{avatar_filename}')
 
     # Get attendance details from the external source
