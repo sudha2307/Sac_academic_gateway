@@ -4,6 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Detect when the user finishes typing the registration number
+            $('#username').on('blur', function() {
+                var reg_number = $(this).val().toUpperCase();  // Get the value of the input field
+                
+                if (reg_number) {
+                    // Send an AJAX request to fetch the student name
+                    $.ajax({
+                        url: '/get_student_name',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ reg_number: reg_number }),
+                        success: function(response) {
+                            // Update the student name field with the returned name
+                            $('#student_name').text(response.student_name);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching student name:', error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
     <style>
        body {
             background: url('https://t4.ftcdn.net/jpg/02/98/06/69/360_F_298066929_M9qgNMr3OJWo6H2GebpA5zOYxN2CphV1.jpg') no-repeat center center fixed;
@@ -228,6 +254,12 @@
             margin-right: 10px;
             border: 2px solid #fff;
         }
+        .studentName {
+    font-size: 2px; /* Small text size */
+    color: #555; /* Subtle text color */
+    margin-top: 5px; /* Small space between the input box and name */
+    font-style: italic; /* Optional: make the text italic */
+}
     </style>
 </head>
 <body>
@@ -238,12 +270,10 @@
     <div class="container">
         <h1>Register</h1>
         <form method="POST" action="{{ url_for('register') }}" enctype="multipart/form-data">
-            <label for="name">Name :</label>
-            <input type="text" id="name" name="name" required style="text-transform: uppercase;">
-
+            
             <label for="username">Register No:</label>
             <input type="text" id="username" name="username" required style="text-transform: uppercase;">
-
+            <p class="student_name" style="font-size: 15px; margin-top: 0; text-align: start;"> Student Name: <span id="student_name" style="font-weight: 300;color: #f0f0f0;"></span></p> <!-- This will be updated dynamically -->
             <label for="password">Password:</label>
             <div class="password-container">
                 <input type="password" id="password" name="password" required>
@@ -256,7 +286,7 @@
                 <ul id="departmentList" class="department-list"></ul>
             </div>
             <input type="hidden" id="department" name="department">
-            <label for="avatar">Choose an avatar for : <p id="sname"></p></label>
+            <label for="avatar">Choose an avatar for :  </label>
             <!-- Avatar selection -->
             <div class="avatar-dropdown">
                 <img id="selectedAvatar" class="selected-avatar" src="{{ url_for('static', filename='avatars/default.jpeg') }}" alt="Selected Avatar">
@@ -400,8 +430,6 @@
 
         // Initialize department list display
         displayDepartments(departments);
-
-        
-    </script>
+           </script>
 </body>
 </html>
