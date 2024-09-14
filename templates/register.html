@@ -271,6 +271,7 @@
         <h1>Register</h1>
         <form method="POST" action="{{ url_for('register') }}" enctype="multipart/form-data">
             
+           
             <label for="username">Register No:</label>
             <input type="text" id="username" name="username" required style="text-transform: uppercase;">
             <p class="student_name" style="font-size: 15px; margin-top: 0; text-align: start;"> Student Name: <span id="student_name" style="font-weight: 300;color: #f0f0f0;"></span></p> <!-- This will be updated dynamically -->
@@ -289,7 +290,7 @@
             <label for="avatar">Choose an avatar for :  </label>
             <!-- Avatar selection -->
             <div class="avatar-dropdown">
-                <img id="selectedAvatar" class="selected-avatar" src="{{ url_for('static', filename='avatars/default.jpeg') }}" alt="Selected Avatar">
+                <img id="selectedAvatar" class="selected-avatar" src="{{ url_for('static', filename='avatars/download.jpeg') }}" alt="Selected Avatar">
                 <span class="avatar-toggle">Select Avatar ▼</span>
                 <div class="avatar-box">
                     <div class="avatar-scroll-container">
