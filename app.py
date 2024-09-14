@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 app = Flask(__name__, static_folder='static')
 
 # Configurations
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://postgres:RtYGDFoOswpAMnMxFrWbnJLleHpTKtUB@junction.proxy.rlwy.net:39853/railway'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://SAC-DATA_owner:uiLaEU68gpOz@ep-royal-mouse-a1x46r4p.ap-southeast-1.aws.neon.tech/SAC-DATA?sslmode=require'
 
 app.config['SECRET_KEY'] = '452c455e9533ee85071833a704fa2c97'
 app.config['UPLOAD_FOLDER'] = 'static/avatars'
