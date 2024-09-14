@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 app = Flask(__name__, static_folder='static')
 
 # Configurations
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://sac_data_user:a7Xx7eWHJXGsxzpRhoFvpMi0bmwe0lwW@dpg-cr8vse5svqrc739hat90-a.singapore-postgres.render.com/sac_data'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://postgres:RtYGDFoOswpAMnMxFrWbnJLleHpTKtUB@junction.proxy.rlwy.net:39853/railway'
 
 app.config['SECRET_KEY'] = '452c455e9533ee85071833a704fa2c97'
 app.config['UPLOAD_FOLDER'] = 'static/avatars'
@@ -35,7 +35,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
     department = db.Column(db.String(150), nullable=False)
-    avatar = db.Column(db.String(150), nullable=True)  # Field to store avatar filename
+    avatar = db.Column(db.String(150), nullable=True,default ='static/avatars/avatar5.jpg')  # Field to store avatar filename
 
 # User loader function for Flask-Login
 @login_manager.user_loader
@@ -115,14 +115,17 @@ def get_student_name():
 @app.route('/')
 def home():
     return render_template('login.html')
-
-# Login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        # Convert username to uppercase to match registration
+        username = request.form['username'].upper()
         password = request.form['password']
+        
+        # Query the user from the database using the uppercase username
         user = User.query.filter_by(username=username).first()
+
+        # Check if user exists and the password matches
         if user and check_password_hash(user.password, password):
             login_user(user)
             session['user_id'] = user.id
@@ -130,6 +133,7 @@ def login():
             return redirect(url_for('dashboard'))
         else:
             flash('Invalid credentials', 'danger')
+    
     return render_template('login.html')
 
 # Register route
@@ -141,7 +145,10 @@ def register():
     if request.method == 'POST':
         # Extract form data
         reg_number = request.form['username'].upper()  # Assuming username is the registration number
-
+        password = request.form['password']
+        department = request.form['department']
+        avatar = request.form.get('avatar', 'default.jpeg')  # Default avatar if none is selected
+        
         # Fetch attendance details to get the student name
         attendance_details = get_attendance_details(
             'https://www.sadakath.ac.in/attendance2.aspx',
@@ -150,21 +157,17 @@ def register():
         )
         student_name = attendance_details.get('Name', 'Unknown')  # Extract student name
 
-        # Process form submission logic here if needed (e.g., saving the student)
-
-        # Extract other form data
-        password = request.form['password']
-        department = request.form['department']
+        # Hash the password
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
 
-        # Check if user already exists
+        # Check if the user already exists
         existing_user = User.query.filter_by(username=reg_number).first()
         if existing_user:
             flash('Username already exists!', 'error')
             return render_template('register.html', student_name=student_name)
 
-        # Create new user
-        new_user = User(name=student_name, username=reg_number, password=hashed_password, department=department)
+        # Create a new user with the selected avatar
+        new_user = User(name=student_name, username=reg_number, password=hashed_password, department=department, avatar=avatar)
         db.session.add(new_user)
         db.session.commit()
 
@@ -177,10 +180,12 @@ def register():
 def dashboard():
     # Fetch current time and avatar
     current_time = datetime.datetime.now()
-    avatar_filename = current_user.avatar or url_for('static', filename='avatars/default.jpeg')
+    
+    # If the user has an avatar, use it; otherwise, use the default avatar
+    avatar_filename = current_user.avatar or 'default.jpeg'
     avatar_url = url_for('static', filename=f'avatars/{avatar_filename}')
 
-    # Get attendance details from the external source
+    # Fetch attendance details
     try:
         attendance_details = get_attendance_details(
             'https://www.sadakath.ac.in/attendance2.aspx', 
@@ -188,20 +193,14 @@ def dashboard():
             *fetch_hidden_fields('https://www.sadakath.ac.in/attendance2.aspx')
         )
     except Exception as e:
-        # If there's an error fetching attendance, set default values
         attendance_details = None
 
-    # Check if 'Records' key exists in attendance_details
+    # Process attendance records
     if attendance_details and 'Records' in attendance_details:
-        try:
-            total_present = sum(float(record.get('Present', 0)) for record in attendance_details['Records'])
-            total_absent = sum(float(record.get('Absent', 0)) for record in attendance_details['Records'])
-            total_od = sum(float(record.get('OD', 0)) for record in attendance_details['Records'])
-        except ValueError as e:
-            # In case of any processing error, set default values
-            total_present = total_absent = total_od = "-"
+        total_present = sum(float(record.get('Present', 0)) for record in attendance_details['Records'])
+        total_absent = sum(float(record.get('Absent', 0)) for record in attendance_details['Records'])
+        total_od = sum(float(record.get('OD', 0)) for record in attendance_details['Records'])
     else:
-        # If 'Records' are not found, set the values to "-"
         total_present = total_absent = total_od = "-"
 
     # Render the dashboard template with the required data
