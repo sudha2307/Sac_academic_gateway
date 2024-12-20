@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 def get_results(reg_no, exam):
-    url = "https://results.sadakath.ac.in/ResultPage00.aspx"
+    url = "https://results.sadakath.ac.in/ResultPage.aspx"
     payload = {
         '__VIEWSTATE': '/wEPDwUJNzE3NDI4OTM5D2QWAgIBD2QWAgIDDxBkDxYBZhYBEAUIQXByIDIwMjQFCEFwciAyMDI0Z2RkZNfhH8TAPGj+jNfJu9VS+f/Gc6Kc',
         '__VIEWSTATEGENERATOR': 'C3B21792',
