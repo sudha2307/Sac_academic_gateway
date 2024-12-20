@@ -8,7 +8,7 @@ def get_results(reg_no, exam):
         '__VIEWSTATEGENERATOR': '7C3C6012',
         '__EVENTVALIDATION': '/wEdAARzN7bZtmqtQXfSWIF0CIprZS6BASrBkr5QeAzZHQV1+txSYZLFsAialTI1fBLjIvnN+DvxnwFeFeJ9MIBWR693ivjs57FeIsSCjQoYF9sSNQrUVAY=',
         'TxtRegno': reg_no,
-        'CMbExam': Nov 2024,
+        'CMbExam': exam,
         'Button1': 'Submit'
     }
 
