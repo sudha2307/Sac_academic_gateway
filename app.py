@@ -10,8 +10,10 @@ from flask_login import UserMixin
 import datetime
 import requests
 from bs4 import BeautifulSoup
+from flask_cors import CORS
 
 app = Flask(__name__, static_folder='static')
+CORS(app)
 
 # Configurations
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://SAC-DATA_owner:uiLaEU68gpOz@ep-royal-mouse-a1x46r4p.ap-southeast-1.aws.neon.tech/SAC-DATA?sslmode=require'
@@ -270,6 +272,10 @@ def get_result():
     reg_no = request.form.get('reg_no')
     exam = request.form.get('exam')
     results = get_results(reg_no, exam)
+    if results:
+        return jsonify(results)  # Convert results to JSON
+    else:
+        return jsonify([]), 404
     return render_template('result.html', results=results)
 
 # CGPA Calculator route
