@@ -4,9 +4,9 @@ from bs4 import BeautifulSoup
 def get_results(reg_no, exam):
     url = "https://results.sadakath.ac.in/ResultPage.aspx"
     payload = {
-        '__VIEWSTATE': '/wEPDwUJNzE3NDI4OTM5D2QWAgIBD2QWAgIDDxBkDxYBZhYBEAUIQXByIDIwMjQFCEFwciAyMDI0Z2RkZNfhH8TAPGj+jNfJu9VS+f/Gc6Kc',
-        '__VIEWSTATEGENERATOR': 'C3B21792',
-        '__EVENTVALIDATION': '/wEdAARWB15LHIeDcKWh0+c980mhZS6BASrBkr5QeAzZHQV1+vfYVcBQlI6FF9YVpRBGMujN+DvxnwFeFeJ9MIBWR693rGBNTopC3b6hMkVb8EyTwjjh0tc=',
+        '__VIEWSTATE': '/wEPDwUJNzE3NDI4OTM5D2QWAgIBD2QWAgIDDxBkDxYBZhYBEAUITm92IDIwMjQFCE5vdiAyMDI0Z2RkZIR/zXQeTg+jyVZbtMreusymyMQ4',
+        '__VIEWSTATEGENERATOR': '7C3C6012',
+        '__EVENTVALIDATION': '/wEdAARzN7bZtmqtQXfSWIF0CIprZS6BASrBkr5QeAzZHQV1+txSYZLFsAialTI1fBLjIvnN+DvxnwFeFeJ9MIBWR693ivjs57FeIsSCjQoYF9sSNQrUVAY=',
         'TxtRegno': reg_no,
         'CMbExam': exam,
         'Button1': 'Submit'
