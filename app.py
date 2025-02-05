@@ -153,9 +153,9 @@ def register():
         
         # Fetch attendance details to get the student name
         attendance_details = get_attendance_details(
-            'https://www.sadakath.ac.in/attendance2.aspx',
+            'https://sadakath.ac.in/attend/attendance2.aspx',
             reg_number,
-            *fetch_hidden_fields('https://www.sadakath.ac.in/attendance2.aspx')
+            *fetch_hidden_fields('https://sadakath.ac.in/attend/attendance2.aspx')
         )
         student_name = attendance_details.get('Name', 'Unknown')  # Extract student name
 
@@ -190,9 +190,9 @@ def dashboard():
     # Fetch attendance details
     try:
         attendance_details = get_attendance_details(
-            'https://www.sadakath.ac.in/attendance2.aspx', 
+            'https://sadakath.ac.in/attend/attendance2.aspx', 
             current_user.username, 
-            *fetch_hidden_fields('https://www.sadakath.ac.in/attendance2.aspx')
+            *fetch_hidden_fields('https://sadakath.ac.in/attend/attendance2.aspx')
         )
     except Exception as e:
         attendance_details = None
@@ -300,7 +300,7 @@ def attendance():
         reg_no = request.form.get('reg_no')
         if reg_no:
             try:
-                url = 'https://www.sadakath.ac.in/attendance2.aspx'
+                url = 'https://sadakath.ac.in/attend/attendance2.aspx'
                 viewstate, viewstate_generator, event_validation = fetch_hidden_fields(url)
                 attendance_details = get_attendance_details(url, reg_no, viewstate, viewstate_generator, event_validation)
                 total_present = sum(float(record['Present']) for record in attendance_details['Records'])
