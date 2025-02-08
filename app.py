@@ -294,25 +294,32 @@ def academic_calender():
     return render_template('academic_calender.html')
 
 # Combined attendance results route
-@app.route('/attendance', methods=['GET', 'POST'])
+@app.route('/attendance', methods=['POST'])
 def attendance():
-    if request.method == 'POST':
-        reg_no = request.form.get('reg_no')
-        if reg_no:
-            try:
-                url = 'https://sadakath.ac.in/attend/attendance2.aspx'
-                viewstate, viewstate_generator, event_validation = fetch_hidden_fields(url)
-                attendance_details = get_attendance_details(url, reg_no, viewstate, viewstate_generator, event_validation)
-                total_present = sum(float(record['Present']) for record in attendance_details['Records'])
-                total_absent = sum(float(record['Absent']) for record in attendance_details['Records'])
-                total_od = sum(float(record['OD']) for record in attendance_details['Records'])
+    try:
+        data = request.get_json()  # Get JSON request body
+        reg_no = data.get('reg_no') if data else None  # Extract 'reg_no' from JSON
 
-                return render_template('attendance_results.html', attendance_details=attendance_details, total_present=total_present, total_absent=total_absent, total_od=total_od)
+        if not reg_no:
+            return jsonify({"error": "Missing roll number"}), 400  # Handle missing roll number
 
-            except Exception as e:
-                return render_template('attendance_results.html', error=str(e))
-    
-    return render_template('attendance_results_form.html')      
+        url = 'https://sadakath.ac.in/attend/attendance2.aspx'
+        viewstate, viewstate_generator, event_validation = fetch_hidden_fields(url)
+
+        # Debugging logs
+        print(f"Fetching attendance for: {reg_no}")
+        print(f"Hidden Fields: {viewstate}, {viewstate_generator}, {event_validation}")
+
+        attendance_details = get_attendance_details(url, reg_no, viewstate, viewstate_generator, event_validation)
+
+        print(f"Attendance details fetched: {attendance_details}")  # Log the response
+
+        return jsonify(attendance_details)  # Return JSON response
+
+    except Exception as e:
+        print(f"Error fetching attendance: {e}")  # Log error details
+        return jsonify({"error": str(e)}), 500  # Return detailed error
+   
 
 # Main entry point
 if __name__ == '__main__':
