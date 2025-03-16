@@ -60,50 +60,72 @@ def fetch_hidden_fields(url):
     
     return viewstate, viewstate_generator, event_validation
 
-# Function to fetch attendance details for 1st-year students
-def get_1st_year_attendance_details(reg_no):
-    url = 'https://sadakath.ac.in/attend/attendance3.aspx'
+# Function to scrape attendance from the website
+def scrape_attendance(reg_no):
+    url = "https://sadakath.ac.in/attend/attendance3.aspx"
     
-    # Fetch hidden fields from the new 1st-year attendance URL
-    viewstate, viewstate_generator, event_validation = fetch_hidden_fields(url)
+    # Simulating a request to get the page
+    session = requests.Session()
+    response = session.get(url)
+    
+    if response.status_code != 200:
+        return {"error": "Failed to access the attendance page"}
+    
+    # Parse the page content
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    # Find the attendance form
+    viewstate = soup.find("input", {"name": "__VIEWSTATE"})["value"]
+    event_validation = soup.find("input", {"name": "__EVENTVALIDATION"})["value"]
 
+    # Data for POST request (form submission)
     payload = {
-        '__VIEWSTATE': viewstate,
-        '__VIEWSTATEGENERATOR': viewstate_generator,
-        '__EVENTVALIDATION': event_validation,
-        'TxtRegno': reg_no,
-        'Button1': 'Submit'
+        "__VIEWSTATE": viewstate,
+        "__EVENTVALIDATION": event_validation,
+        "txtRegno": reg_no,
+        "btnView": "View Attendance"
     }
 
-    response = requests.post(url, data=payload)
-    soup = BeautifulSoup(response.content, 'html.parser')
+    # Submit the form with the registration number
+    response = session.post(url, data=payload)
+    
+    if response.status_code != 200:
+        return {"error": "Failed to fetch attendance data"}
 
-    result = {}
-    result['AdminNo'] = soup.find('span', {'id': 'Label1'}).text.strip()
-    result['Name'] = soup.find('span', {'id': 'Label2'}).text.strip()
+    # Parse the response
+    soup = BeautifulSoup(response.text, 'html.parser')
+    table = soup.find("table", {"id": "attendanceTable"})  # Adjust the ID based on actual table structure
 
-    # Extract table data
-    table = soup.find('table', {'id': 'GridView1'})
-    if table:
-        rows = table.find_all('tr')[1:]
-        result['Records'] = []
-        for row in rows:
-            columns = row.find_all('td')
-            record = {
-                'CCode': columns[0].text.strip(),
-                'Semno': columns[1].text.strip(),
-                'RegNo': columns[2].text.strip(),
-                'AdmnNo': columns[3].text.strip(),
-                'SName': columns[4].text.strip(),
-                'Total': columns[5].text.strip(),
-                'Present': columns[6].text.strip(),
-                'Absent': columns[7].text.strip(),
-                'OD': columns[8].text.strip(),
-                'Percentage': columns[9].text.strip()
-            }
-            result['Records'].append(record)
+    if not table:
+        return {"error": "No attendance data found"}
 
-    return result
+    # Extract data from table rows
+    rows = table.find_all("tr")[1:]  # Skipping header row
+    attendance_records = []
+
+    for row in rows:
+        columns = row.find_all("td")
+        if len(columns) < 7:
+            continue  # Skip invalid rows
+        
+        record = {
+            "RegNo": reg_no,
+            "SubCode": columns[0].text.strip(),
+            "Total": columns[1].text.strip(),
+            "Present": columns[2].text.strip(),
+            "Absent": columns[3].text.strip(),
+            "OD": columns[4].text.strip(),
+            "Total_Present": columns[5].text.strip(),
+            "Present_Percentage": columns[6].text.strip(),
+        }
+        attendance_records.append(record)
+
+    return {
+        "AdminNo": reg_no,
+        "Name": f"Student {reg_no}",
+        "Records": attendance_records
+    }
+
 
 
 # Function to get attendance details
@@ -366,22 +388,24 @@ def attendance():
         print(f"Error fetching attendance: {e}")  # Log error details
         return jsonify({"error": str(e)}), 500  # Return detailed error
 
+# Flask API Route
 @app.route('/attendance_1st_year', methods=['POST'])
-def attendance_1st_year():
+def get_first_year_attendance():
     try:
         data = request.get_json()
-        reg_no = data.get('reg_no') if data else None
+        reg_no = data.get("reg_no", "").strip()
 
         if not reg_no:
-            return jsonify({"error": "Missing roll number"}), 400
+            return jsonify({"error": "Registration number is required"}), 400
 
-        attendance_details = get_1st_year_attendance_details(reg_no)
-
-        return jsonify(attendance_details)
+        attendance_data = scrape_attendance(reg_no)
+        if "error" in attendance_data:
+            return jsonify(attendance_data), 404
+        
+        return jsonify(attendance_data)
 
     except Exception as e:
-        print(f"Error fetching 1st-year attendance: {e}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Server error: {str(e)}"}), 500
 
    
 
