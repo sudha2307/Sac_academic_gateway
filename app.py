@@ -60,6 +60,52 @@ def fetch_hidden_fields(url):
     
     return viewstate, viewstate_generator, event_validation
 
+# Function to fetch attendance details for 1st-year students
+def get_1st_year_attendance_details(reg_no):
+    url = 'https://sadakath.ac.in/attend/attendance3.aspx'
+    
+    # Fetch hidden fields from the new 1st-year attendance URL
+    viewstate, viewstate_generator, event_validation = fetch_hidden_fields(url)
+
+    payload = {
+        '__VIEWSTATE': viewstate,
+        '__VIEWSTATEGENERATOR': viewstate_generator,
+        '__EVENTVALIDATION': event_validation,
+        'TxtRegno': reg_no,
+        'Button1': 'Submit'
+    }
+
+    response = requests.post(url, data=payload)
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    result = {}
+    result['AdminNo'] = soup.find('span', {'id': 'Label1'}).text.strip()
+    result['Name'] = soup.find('span', {'id': 'Label2'}).text.strip()
+
+    # Extract table data
+    table = soup.find('table', {'id': 'GridView1'})
+    if table:
+        rows = table.find_all('tr')[1:]
+        result['Records'] = []
+        for row in rows:
+            columns = row.find_all('td')
+            record = {
+                'CCode': columns[0].text.strip(),
+                'Semno': columns[1].text.strip(),
+                'RegNo': columns[2].text.strip(),
+                'AdmnNo': columns[3].text.strip(),
+                'SName': columns[4].text.strip(),
+                'Total': columns[5].text.strip(),
+                'Present': columns[6].text.strip(),
+                'Absent': columns[7].text.strip(),
+                'OD': columns[8].text.strip(),
+                'Percentage': columns[9].text.strip()
+            }
+            result['Records'].append(record)
+
+    return result
+
+
 # Function to get attendance details
 def get_attendance_details(url, reg_no, viewstate, viewstate_generator, event_validation):
     payload = {
@@ -319,6 +365,24 @@ def attendance():
     except Exception as e:
         print(f"Error fetching attendance: {e}")  # Log error details
         return jsonify({"error": str(e)}), 500  # Return detailed error
+
+@app.route('/attendance_1st_year', methods=['POST'])
+def attendance_1st_year():
+    try:
+        data = request.get_json()
+        reg_no = data.get('reg_no') if data else None
+
+        if not reg_no:
+            return jsonify({"error": "Missing roll number"}), 400
+
+        attendance_details = get_1st_year_attendance_details(reg_no)
+
+        return jsonify(attendance_details)
+
+    except Exception as e:
+        print(f"Error fetching 1st-year attendance: {e}")
+        return jsonify({"error": str(e)}), 500
+
    
 
 # Main entry point
