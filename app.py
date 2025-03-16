@@ -390,7 +390,7 @@ def attendance():
 
 # Flask API Route
 @app.route('/attendance_1st_year', methods=['POST'])
-def get_first_year_attendance():
+def attendance_1st_year():
     try:
         data = request.get_json()
         reg_no = data.get("reg_no", "").strip()
