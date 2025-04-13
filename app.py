@@ -335,21 +335,54 @@ def about():
 def index():
     return render_template('result_ui.html')
 
-@app.route('/get_result', methods=['POST'])
-def get_result():
-    data = request.json
-    reg_no = data.get('reg_no')
-    exam = data.get('exam')
-    
-    if not reg_no or not exam:
-        return jsonify({'error': 'Registration number and exam required.'}), 400
 
-    results = get_results(reg_no, exam)
-    
-    if results is None:
-        return jsonify([]), 200  # Or return a custom message
-    
-    return jsonify(results), 200
+@app.route('/get_result', methods=['POST'])
+def get_results(reg_no, exam):
+    url = "https://results.sadakath.ac.in/ResultPage.aspx"
+
+    session = requests.Session()
+
+    # First GET request to fetch latest hidden field values
+    response = session.get(url, verify=False)
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    viewstate = soup.find('input', {'id': '__VIEWSTATE'})['value']
+    eventvalidation = soup.find('input', {'id': '__EVENTVALIDATION'})['value']
+    viewstategenerator = soup.find('input', {'id': '__VIEWSTATEGENERATOR'})['value']
+
+    # Now prepare POST payload using latest values
+    payload = {
+        '__VIEWSTATE': viewstate,
+        '__VIEWSTATEGENERATOR': viewstategenerator,
+        '__EVENTVALIDATION': eventvalidation,
+        'TxtRegno': reg_no,
+        'CMbExam': exam,
+        'Button1': 'Submit'
+    }
+
+    # Send the POST request
+    response = session.post(url, data=payload, verify=False)
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    # Parsing the result table
+    results_table = soup.find('table', id='GridView1')
+    if results_table:
+        results = []
+        rows = results_table.find_all('tr')[1:]  # skip header
+        for row in rows:
+            columns = row.find_all('td')
+            result = {
+                'sub_code': columns[0].text.strip(),
+                'sub_name': columns[1].text.strip(),
+                'int_mark': columns[2].text.strip(),
+                'ext_mark': columns[3].text.strip(),
+                'total': columns[4].text.strip(),
+                'result': columns[5].text.strip()
+            }
+            results.append(result)
+        return results
+    else:
+        return None
 
 # CGPA Calculator route
 @app.route('/cgpa_calculator')
