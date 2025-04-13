@@ -340,11 +340,11 @@ def get_result():
     reg_no = request.form.get('reg_no')
     exam = request.form.get('exam')
     results = get_results(reg_no, exam)
+    
     if results:
-        return jsonify(results)  # Convert results to JSON
+        return jsonify(results)  # Return the results as JSON
     else:
         return jsonify([]), 404
-    return render_template('result.html', results=results)
 
 # CGPA Calculator route
 @app.route('/cgpa_calculator')
