@@ -337,14 +337,19 @@ def index():
 
 @app.route('/get_result', methods=['POST'])
 def get_result():
-    reg_no = request.form.get('reg_no')
-    exam = request.form.get('exam')
+    data = request.json
+    reg_no = data.get('reg_no')
+    exam = data.get('exam')
+    
+    if not reg_no or not exam:
+        return jsonify({'error': 'Registration number and exam required.'}), 400
+
     results = get_results(reg_no, exam)
     
-    if results:
-        return jsonify(results)  # Return the results as JSON
-    else:
-        return jsonify([]), 404
+    if results is None:
+        return jsonify([]), 200  # Or return a custom message
+    
+    return jsonify(results), 200
 
 # CGPA Calculator route
 @app.route('/cgpa_calculator')
