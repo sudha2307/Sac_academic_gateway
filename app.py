@@ -346,9 +346,9 @@ def get_results(reg_no, exam):
     response = session.get(url, verify=False)
     soup = BeautifulSoup(response.content, 'html.parser')
 
-    viewstate = soup.find('input', {'id': '__VIEWSTATE'})['value']
-    eventvalidation = soup.find('input', {'id': '__EVENTVALIDATION'})['value']
-    viewstategenerator = soup.find('input', {'id': '__VIEWSTATEGENERATOR'})['value']
+    viewstate = soup.find('input', {'id': '__VIEWSTATE'})['/wEPDwUJNzE3NDI4OTM5D2QWAgIBD2QWAgIDDxBkDxYBZhYBEAUITm92IDIwMjQFCE5vdiAyMDI0Z2RkZIR/zXQeTg+jyVZbtMreusymyMQ4']
+    eventvalidation = soup.find('input', {'id': '__EVENTVALIDATION'})['7C3C6012']
+    viewstategenerator = soup.find('input', {'id': '__VIEWSTATEGENERATOR'})['/wEdAARzN7bZtmqtQXfSWIF0CIprZS6BASrBkr5QeAzZHQV1+txSYZLFsAialTI1fBLjIvnN+DvxnwFeFeJ9MIBWR693ivjs57FeIsSCjQoYF9sSNQrUVAY=']
 
     # Now prepare POST payload using latest values
     payload = {
