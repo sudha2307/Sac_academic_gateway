@@ -337,7 +337,10 @@ def index():
 
 
 @app.route('/get_result', methods=['POST'])
-def get_results(reg_no, exam):
+def get_results():
+    reg_no = request.form.get('reg_no')
+    exam = request.form.get('exam')
+
     url = "https://results.sadakath.ac.in/ResultPage.aspx"
 
     session = requests.Session()
@@ -346,9 +349,9 @@ def get_results(reg_no, exam):
     response = session.get(url, verify=False)
     soup = BeautifulSoup(response.content, 'html.parser')
 
-    viewstate = soup.find('input', {'id': '__VIEWSTATE'})['/wEPDwUJNzE3NDI4OTM5D2QWAgIBD2QWAgIDDxBkDxYBZhYBEAUITm92IDIwMjQFCE5vdiAyMDI0Z2RkZIR/zXQeTg+jyVZbtMreusymyMQ4']
-    eventvalidation = soup.find('input', {'id': '__EVENTVALIDATION'})['7C3C6012']
-    viewstategenerator = soup.find('input', {'id': '__VIEWSTATEGENERATOR'})['/wEdAARzN7bZtmqtQXfSWIF0CIprZS6BASrBkr5QeAzZHQV1+txSYZLFsAialTI1fBLjIvnN+DvxnwFeFeJ9MIBWR693ivjs57FeIsSCjQoYF9sSNQrUVAY=']
+    viewstate = soup.find('input', {'id': '__VIEWSTATE'})['value']
+    eventvalidation = soup.find('input', {'id': '__EVENTVALIDATION'})['value']
+    viewstategenerator = soup.find('input', {'id': '__VIEWSTATEGENERATOR'})['value']
 
     # Now prepare POST payload using latest values
     payload = {
@@ -380,9 +383,10 @@ def get_results(reg_no, exam):
                 'result': columns[5].text.strip()
             }
             results.append(result)
-        return results
+        return jsonify(results)
     else:
-        return None
+        return jsonify({'message': 'No result found.'}), 404
+
 
 # CGPA Calculator route
 @app.route('/cgpa_calculator')
