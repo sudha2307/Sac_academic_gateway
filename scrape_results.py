@@ -12,14 +12,18 @@ def get_results(reg_no, exam):
         'Button1': 'Submit'
     }
 
+    print(f"🔍 Fetching result for: {reg_no}, {exam}")
     response = requests.post(url, data=payload, verify=False)
+    print(f"📥 Response received (status code: {response.status_code})")
+
     soup = BeautifulSoup(response.content, 'html.parser')
 
     # Parsing the result page
     results_table = soup.find('table', id='GridView1')
     if results_table:
+        print("✅ Results table found.")
         results = []
-        rows = results_table.find_all('tr')[1:]  # Skip header row
+        rows = results_table.find_all('tr')[1:]  # Skip header
         for row in rows:
             columns = row.find_all('td')
             result = {
@@ -31,6 +35,8 @@ def get_results(reg_no, exam):
                 'result': columns[5].text.strip()
             }
             results.append(result)
+        print(f"🎉 Total subjects found: {len(results)}")
         return results
     else:
+        print("❌ No results table found.")
         return None
